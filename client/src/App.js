@@ -11,33 +11,18 @@ import Signup from "./components/auth/Signup";
 import Logout from "./components/auth/Logout";
 import Login from "./components/auth/Login";
 import ErrorPage from "./components/ErrorPage";
-import Halls from "./components/halls/Halls";
-import BookingForm from "./components/bookings/BookingForm";
-import BookingsAdmin from "./components/bookings/BookingsAdmin";
-import BookingsHod from "./components/bookings/BookingsHod";
-
 import AdminDashboard from "./components/dashboard/AdminDashboard";
-import BookingFaculty from "./components/bookings/BookingsFaculty";
 import Footer from "./components/Footer";
-import HallsAdmin from "./components/halls/HallsAdmin";
 import { initialState, reducer } from "./reducer/UseReducer";
 
 
 
 import {  ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import HallsEdit from "./components/halls/HallsEdit";
-import HallForm from "./components/halls/HallForm";
-// import HodDashboard from "./components/dashboard/HodDashboard";
-// import PasswordReset from "./components/auth/PasswordReset";
-
-// import ForgotPassword from "./components/auth/ForgotPassword";
-// import VerifySuccess from "./components/auth/VerifySuccess";
 import Unauthorized from "./components/Unauthorized";
-import BookingUpdateFrom from "./components/bookings/BookingUpdateForm"
 // import Events from "./components/bookings/Events";
-import BookingsView from "./components/bookings/BookingView";
 // import { CalendarView } from "./components/CalendarView";
+
 import ApplicationForm from "./components/bookings/ApplicationForm";
 import ApplicationView from "./components/bookings/ApplicationView";
 import EditApplication from "./components/bookings/EditApplication";
@@ -84,19 +69,19 @@ const App = () => {
           {/* YET TO COMPLETE /application-edit */}
           <Route exact path="/application-edit/:applicationId" element={(state.userType === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod")) ? <EditApplication/> : <Unauthorized />} />
 
-          <Route path="/halls" element={state.userType === "admin" ? <HallsAdmin/> : <Halls />}/>
-          <Route exact path="/halls/:hallId/:hallName" element={state.userType === "admin" ?<HallsEdit /> : <Unauthorized />} />
+          {/* <Route path="/halls" element={state.userType === "admin" ? <HallsAdmin/> : <Halls />}/> */}
+          {/* <Route exact path="/halls/:hallId/:hallName" element={state.userType === "admin" ?<HallsEdit /> : <Unauthorized />} /> */}
           {/* <Route exact path="/bookingsEdit/:bookingId" element={state.userType === "admin" ? <BookingUpdateFrom/>  : process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod" ? <BookingUpdateFrom/>  : <Unauthorized />} /> */}
           
           
           {/* <Route exact path="/bookings/:bookingId" element={state.userType === "admin" ? <BookingUpdateFrom/>  : state.userType === "hod" ? <BookingUpdateFrom/>  : <Unauthorized />} /> */}
-          <Route path="/hallForm" element={state.userType === "admin" ?<HallForm /> : <Unauthorized />} />
+          {/* <Route path="/hallForm" element={state.userType === "admin" ?<HallForm /> : <Unauthorized />} /> */}
 
-          <Route path="/bookings" element={state.userType === "admin" ? <BookingsAdmin/> : state.userType === "faculty" ? <BookingFaculty/> :  process.env.REACT_APP_HOD_FEATURE && state.userType === "hod" ? <BookingsHod/>  : <Unauthorized />} />
-          <Route exact path="/bookingForm/:hallId/:hallName" element={<BookingForm />} />
+          {/* <Route path="/bookings" element={state.userType === "admin" ? <BookingsAdmin/> : state.userType === "faculty" ? <BookingFaculty/> :  process.env.REACT_APP_HOD_FEATURE && state.userType === "hod" ? <BookingsHod/>  : <Unauthorized />} /> */}
+          {/* <Route exact path="/bookingForm/:hallId/:hallName" element={<BookingForm />} /> */}
           {/* <Route path="/bookings" element={<Booking/>} /> */}
 
-          <Route exact path="/bookingsView/:bookingId" element={<BookingsView/>} />
+          {/* <Route exact path="/bookingsView/:bookingId" element={<BookingsView/>} /> */}
    
 
           <Route path="/*" element={<ErrorPage />} />

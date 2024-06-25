@@ -1,0 +1,20 @@
+{
+  "short_name": "Application Registration System",
+  "name": "Application Registration System",
+  "icons": [
+    {
+      "src": "logo.ico",
+      "sizes": "48x48 64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo.png",
+      "type": "image/png",
+      "sizes": "422x48"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

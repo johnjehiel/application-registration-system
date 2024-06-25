@@ -1,0 +1,25 @@
+
+yet to implement:
+    - modify userschema (add appropriate roles), authentication method
+    - role based authentication middleware to secure backend
+    - allow admins to create new reviewers
+    
+
+implemented:
+    - remove reject button if isApproved is "rejected by Admin"
+    - remove approve & reject button if isApproved is "reject by Admin" or "reject by Admin"
+
+
+
+email sign in how ? 
+phone no. sign in how ? 
+necessary fields for applicant, receiver, admin
+application field detail
+reviewer creation
+
+font: mukta, 
+
+userschema:
+-name, email, phone number, userType/role(enum), password, cpassword, timestamps=true
+applicationschema:
+-userId, applicantName, applicationName, email, phno, altno, upload pdf, description, rejectionreason, isapproved(enum), timestamps=true

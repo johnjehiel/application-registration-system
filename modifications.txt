@@ -1,0 +1,12 @@
+1) remove disabled field
+2) mention dates in flow bar
+3) remove toggle for reviewer's operation (optional)
+sign up:
+applicant - username, email, phone validation
+
+login:
+captcha
+
+file upload above description
+ONLY PDF
+preview the document when VIEWED (embed)

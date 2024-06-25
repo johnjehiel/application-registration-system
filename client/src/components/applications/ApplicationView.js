@@ -6,6 +6,11 @@ import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
 import { parseISO, format } from "date-fns";
 import { UserContext } from "../../App";
+import { Document, Page } from 'react-pdf';
+
+// import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 
 import {
   RequestSent,
@@ -14,6 +19,8 @@ import {
   RejectedByAdmin,
   RejectedByHod,
 } from "../Steps";
+import PdfComp from "../pdfComp";
+
 
 const ApplicationView = () => {
   const navigate = useNavigate();
@@ -48,6 +55,7 @@ const ApplicationView = () => {
       );
       const data = response.data.application;
       setApplicationData(data);
+      // console.log(applicationData.pdfFile)
       setIsLoading(false);
     } catch (error) {
       navigate("/");
@@ -103,35 +111,6 @@ const ApplicationView = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-    /* 
-    {
-  _id: new ObjectId("6677035393450cf1742efdaf"),
-  userId: {
-    _id: new ObjectId("6676a5d60c2b3cfe83a6b9f6"),
-    name: 'John Jehiel',
-    email: 'faculty@gmail.com',
-    institution: 'AITR',
-    department: 'IT',
-    phone: 9677011025,
-    userType: 'faculty',
-    adminKey: 'null',
-    emailVerified: true,
-    date: 2024-06-22T10:22:14.635Z,
-    __v: 8
-  },
-  applicantName: 'John Jehiel',
-  applicationName: 'application 1',
-  email: 'faculty@gmail.com',
-  phoneNumber: 9677011025,
-  altNumber: null,
-  description: 'description for app 1',
-  isApproved: 'Application Sent',
-  createdAt: 2024-06-22T17:01:07.028Z,
-  updatedAt: 2024-06-22T17:01:07.028Z,
-  __v: 0
-}
-
-    */
   return (
     <>
       {isLoading ? (
@@ -253,6 +232,31 @@ const ApplicationView = () => {
                   </p>
                 </div>
               </div>
+              {/* pdf viewing format 1 */}
+              {applicationData.pdfFile && applicationData.pdfFile.filename && (
+                <div className="flex flex-wrap -mx-3 mb-6">
+                  <div className="w-full px-3">
+                    <h1 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+                      Attached File
+                    </h1>
+                    <div className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                      <Document
+                        file={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}
+                        onLoadSuccess={({ numPages }) => console.log(`Loaded PDF with ${numPages} pages.`)}
+                        >
+                        <Page pageNumber={1} />
+                      </Document>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* pdf viewing format 2 */}
+              {
+                applicationData.pdfFile  && applicationData.pdfFile.filename && (
+                  <PdfComp fileURL={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}/>
+                )
+              }
 
               {applicationData.rejectionReason && (
                 <div className="flex flex-wrap -mx-3 mb-6">

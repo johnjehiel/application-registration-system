@@ -2,6 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors")
+const path = require("path")
 // const connectDB = require("./DB/conn");
 const cookieParser = require("cookie-parser");
 const app = express();
@@ -15,7 +16,7 @@ app.set("trust proxy",1);
 
 
 app.use(express.json());
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config({path:"./.env"})
 
 // app.use((req, res, next) => {

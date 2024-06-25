@@ -1,68 +1,27 @@
 import React, { useState, useContext } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./../../App";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
-
+import MetaData from "../layouts/MetaData";
+import { login } from "../../actions/userActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
 
-
   const { dispatch } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false);
-
-
+  
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState("");
 
-  //   const loginUser = async (e) => {
-  //     e.prevenDefault();
-
-  //     const res = await fetch("http://localhost:9002/login", {
-  //       method: "POST",
-  //       credentials: 'include',
-  //       headers: {
-  //         "Content-Type": "application/json",
-
-  //       },
-  //       body: JSON.stringify({
-  //         email,
-
-  //         password,
-  //       }),
-  //     });
-
-  //     const data = await res.json();
-
-  //     if (res.status === 400 || !data) {
-  //       window.alert("invalid credentials");
-  //     } else {
-  //       window.alert("Login Successfull");
-  //       navigate("/login");
-  //     }
-  //   };
-
-
-
-
-
-
-
-
-
-
-
-
   const loginUser = async (e) => {
     e.preventDefault();
-
     setIsLoading(true)
-
     try {
-      // const response = await axios.post("http://localhost:3500/login", {
 
       const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/login`, {
         
@@ -77,23 +36,8 @@ const Login = () => {
       });
       
       const data = response.data;
-      
-      //consolelog(data.userLogin);
-      //consolelog(data.token);
-
-      // sessionStorage.setItem("jwtoken", data.token);
-      // document.cookie = `jwtoken=${data.token}; expires=${new Date(Date.now() + 9000000)}; path=/`;
-      // document.cookie = `jwtoken=${data.token}; expires=${new Date(Date.now() + 9000000)}; path=/; `
-      // domain=.onrender.com`;
-
-      // Cookies.set("jwtoken", data.token, { expires: new Date(Date.now() + 9000000), path: "/" });
 
       localStorage.setItem("jwtoken", data.token)
-      // if (response.status === 400 || !data) {
-      //   setAuthStatus("Invalid credentials");
-      //   window.alert("invalid")
-      // } else {
-
 
       dispatch({ type: "USER", payload: true })
 
@@ -118,24 +62,41 @@ const Login = () => {
         setAuthStatus(data.error)
       } else {
         setAuthStatus("Something Went Worng")
-        //consolelog(error)
-
+        console.log(error)
       }
-      // //consolelog(error);  
     }
   };
+  /*
+  const dispatch = useDispatch();
+  const location = useLocation();
+  
+  const { loading, error, isAuthenticated } = useSelector(state => state.authState);
 
+  const LoginUserNew = (e) => {
+    e.preventDefault();
+    dispatch(login(email, password));
+  }
 
+  useEffect(() => {
+        if(isAuthenticated) {
+            navigate('/')
+        }
 
-
-
-
-
-
-
+        if(error)  {
+            toast(error, {
+                position: toast.POSITION.BOTTOM_CENTER,
+                type: 'error',
+                onOpen: ()=> { dispatch(clearAuthError) }
+            })
+            return
+        }
+    },[error, isAuthenticated, dispatch, navigate])
+    */
 
   return (
-    <>{isLoading ? (
+    <>
+    <MetaData title={`Sign In`} />
+    {isLoading ? (
       <LoadingSpinner />
     ) :
       <section className="text-gray-600 body-font min-h-screen flex items-center justify-center bg-white">
@@ -192,7 +153,6 @@ const Login = () => {
 
             <div className="my-4">
               <p className="text-s text-red-600	 font-bold">
-
                 {authStatus}
               </p>
             </div>
@@ -213,6 +173,7 @@ const Login = () => {
                   type="submit"
                   onClick={loginUser}
                   className="text-white bg-indigo-600 shadow focus:shadow-outline focus:outline-none border-0 py-2 px-10 font-bold  hover:bg-indigo-800 rounded text-lg"
+                  // disabled={loading}
                 >
                   Login
                 </button>

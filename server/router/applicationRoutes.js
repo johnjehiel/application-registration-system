@@ -1,12 +1,14 @@
 const express = require('express');
 const multer = require('multer');
+const path = require('path')
+
 const router = express.Router();
 const applicationController = require('../controllers/applicationController');
 const authenticate = require("../middleware/authenticate");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, 'uploads/'); // Ensure this directory exists
+      cb(null, path.join( __dirname,'..' ,'uploads/')); // Ensure this directory exists
     },
     filename: (req, file, cb) => {
       cb(null, `${Date.now()}-${file.originalname}`);

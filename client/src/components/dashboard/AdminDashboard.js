@@ -1,9 +1,6 @@
 import React from 'react'
 import AdminApplicationList from '../applications/AdminApplicationList';
-// import BookingsHod from '../bookings/BookingsHod'
-
-// import Events from '../bookings/Events'
-// import Index from '../bookings/Table'
+import MetaData from '../layouts/MetaData';
 
 const AdminDashboard = () => {
   return (
@@ -14,6 +11,7 @@ const AdminDashboard = () => {
 
 
         <div className=''>
+          <MetaData title={"Application Registration System"} />
           <AdminApplicationList/>
         </div>
 

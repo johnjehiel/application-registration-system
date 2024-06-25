@@ -20,6 +20,10 @@ reviewer creation
 font: mukta, 
 
 userschema:
--name, email, phone number, userType/role(enum), password, cpassword, timestamps=true
+-name, email, phone number, userType/role(enum), password, timestamps=true
 applicationschema:
 -userId, applicantName, applicationName, email, phno, altno, upload pdf, description, rejectionreason, isapproved(enum), timestamps=true
+
+how to create reviewer accounts
+how is admin built-in in java?
+using email or phone to login => email or phone to login 

@@ -120,9 +120,13 @@ const createNewApplication = async (req, res, next) => {
       description,
       isApproved
     } = req.body;
+    //  console.log(req.body);
+    const title = req.file?.originalname;
+    const filename =  req.file?.filename;
+
+    const pdfFile = {title, filename};
     
-    const pdfFile = req.file.path;
-    
+    // console.log(pdfFile);
     const user = await User.findById(userId);
     if (!user) {
       return res.status(422).json({ error: 'user not found' });

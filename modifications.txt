@@ -2,10 +2,12 @@
 2) mention dates in flow bar
 3) remove toggle for reviewer's operation (optional)
 sign up:
-applicant - username, email, phone validation
+applicant - Name, email, password, phone +  validation + captcha
+
+userSchema => Name, email, password, phone, role, timestamps=true
 
 login:
-captcha
+email, password + validation+ captcha
 
 file upload above description
 ONLY PDF

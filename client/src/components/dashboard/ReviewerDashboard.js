@@ -1,5 +1,6 @@
 import React from 'react'
 import ReviewerApplicationList from '../applications/ReviewerApplicationList';
+import MetaData from '../layouts/MetaData';
 // import Events from '../bookings/Events'
 
 const ReviewerDashboard = () => {
@@ -11,6 +12,7 @@ const ReviewerDashboard = () => {
 
 
         <div className=''>
+          <MetaData title={"Application Registration System"} />
           <ReviewerApplicationList/>
           {/* <Index/> */}
         </div>

@@ -5,6 +5,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
 
 import notVerified from "../../assets/notVerified.jpg";
+import MetaData from "../layouts/MetaData";
 const ApplicationForm = () => {
   const navigate = useNavigate();
   const [authStatus, setAuthStatus] = useState("");
@@ -101,6 +102,7 @@ const ApplicationForm = () => {
 
   const submitForm = async (e) => {
     e.preventDefault();
+    // console.log(file);
     setIsLoading(true);
     const {
       applicantName,
@@ -180,8 +182,8 @@ const ApplicationForm = () => {
         {
           withCredentials: true, // To include credentials in the request
           headers: {
-            "Content-Type": "application/json",
-          },
+            "Content-Type": "multipart/form-data",
+          }
         }
       );
 
@@ -220,6 +222,7 @@ const ApplicationForm = () => {
   };
   return (
     <>
+      <MetaData title={`Application Form`} />
       {isLoading ? (
         <LoadingSpinner />
       ) : !emailVerified ? (

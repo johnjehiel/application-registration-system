@@ -1,5 +1,6 @@
 import React from 'react'
 import ApplicantApplicationList from '../applications/ApplicantApplicationList'
+import MetaData from '../layouts/MetaData'
 // import BookingFaculty from '../bookings/BookingsFaculty'
 
 const ApplicantDashboard = () => {
@@ -11,6 +12,7 @@ const ApplicantDashboard = () => {
         Applicant  <span className="text-indigo-700">Dashboard</span> </h1>
 
           <div className='m-3'>
+          <MetaData title={"Application Registration System"} />
             <ApplicantApplicationList />
           </div>
       

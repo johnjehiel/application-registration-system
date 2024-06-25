@@ -38,8 +38,14 @@ const applicationSchema = new mongoose.Schema(
       required: true
     },
     pdfFile: {
-      type: String,
-      required: true
+      title: {
+        type: String,
+        required: true
+      },
+      filename: {
+        type: String,
+        required: true
+      }
     }
   },
   {

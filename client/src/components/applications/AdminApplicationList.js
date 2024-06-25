@@ -4,11 +4,6 @@ import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import { format } from "date-fns"
-// import BookingForm from "./BookingForm";
-// eslint-disable-next-line no-unused-vars
-// import { ApprovedByAdmin, ApprovedByHod, RejectedByAdmin } from "../Steps"
-// eslint-disable-next-line no-unused-vars
-// import Index from "./Table";
 const AdminApplicationList = () => {
   const navigate = useNavigate();
   const [applicationData, setApplicationData] = useState({});

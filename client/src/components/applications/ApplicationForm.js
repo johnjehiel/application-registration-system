@@ -208,11 +208,11 @@ const ApplicationForm = () => {
           toast.error("Unauthorized request!");
         } else {
           console.error(error);
-          toast.error("An error occurred while creating the booking.");
+          toast.error("An error occurred while creating the application.");
         }
       } else {
         console.error(error);
-        toast.error("An error occurred while creating the booking.");
+        toast.error("An error occurred while creating the application.");
       }
     } finally {
       setIsLoading(false);

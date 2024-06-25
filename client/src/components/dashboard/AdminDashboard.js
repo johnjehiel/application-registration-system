@@ -1,5 +1,5 @@
 import React from 'react'
-import AdminApplicationList from '../bookings/AdminApplicationList';
+import AdminApplicationList from '../applications/AdminApplicationList';
 // import BookingsHod from '../bookings/BookingsHod'
 
 // import Events from '../bookings/Events'

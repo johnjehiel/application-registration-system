@@ -24,21 +24,14 @@ dotenv.config({path:"./.env"})
 // });
 const connectDB = require("./DB/conn")
 require("./model/userSchema")
-require("./model/hallSchema")
-require("./model/bookingSchema")
+require("./model/applicationSchema")
 
 app.use(require("./router/authRoutes"));
-app.use(require("./router/bookingRoutes"));
-app.use(require("./router/hallRoutes"));
+app.use(require("./router/applicationRoutes"));
 
-// app.use('/api/halls', hallRoutes);
-// app.use('/api/bookings', bookingRoutes);
 connectDB()
 
-
 const PORT = process.env.PORT
-
-
 
 app.listen(PORT, () => {
   console.log("Server is running on port",PORT);

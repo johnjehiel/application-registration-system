@@ -1,5 +1,5 @@
 import React from 'react'
-import ReviewerApplicationList from '../bookings/ReviewerApplicationList';
+import ReviewerApplicationList from '../applications/ReviewerApplicationList';
 // import Events from '../bookings/Events'
 
 const ReviewerDashboard = () => {

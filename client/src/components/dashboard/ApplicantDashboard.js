@@ -1,5 +1,5 @@
 import React from 'react'
-import ApplicantApplicationList from '../bookings/ApplicantApplicationList'
+import ApplicantApplicationList from '../applications/ApplicantApplicationList'
 // import BookingFaculty from '../bookings/BookingsFaculty'
 
 const ApplicantDashboard = () => {

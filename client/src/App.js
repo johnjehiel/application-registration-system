@@ -6,8 +6,8 @@ import axios from "axios"
 import Navbar from "./components/Navbar";
 // import Home from "./components/Home";
 // import About from "./components/About";
-// import Contact from "./components/Contact";
-import Signup from "./components/auth/Signup";
+
+// import Signup from "./components/auth/Signup";
 import Logout from "./components/auth/Logout";
 import Login from "./components/auth/Login";
 import ErrorPage from "./components/ErrorPage";
@@ -20,13 +20,12 @@ import { initialState, reducer } from "./reducer/UseReducer";
 import {  ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Unauthorized from "./components/Unauthorized";
-// import Events from "./components/bookings/Events";
 // import { CalendarView } from "./components/CalendarView";
 
-import ApplicationForm from "./components/bookings/ApplicationForm";
-import ApplicationView from "./components/bookings/ApplicationView";
-import EditApplication from "./components/bookings/EditApplication";
-import ReviewerDashboard from "./components/dashboard/HodDashboard";
+import ApplicationForm from "./components/applications/ApplicationForm";
+import ApplicationView from "./components/applications/ApplicationView";
+import EditApplication from "./components/applications/EditApplication";
+import ReviewerDashboard from "./components/dashboard/ReviewerDashboard";
 import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
 export const UserContext = createContext();
 const App = () => {

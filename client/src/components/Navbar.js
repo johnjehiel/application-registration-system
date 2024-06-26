@@ -2,10 +2,12 @@ import React, { useContext   } from "react";
 import { Link } from "react-router-dom";
 import { UserContext } from "../App";
 import logo from '../assets/logo.png'
+import { useSelector } from "react-redux";
 
 
 const Navbar = () => {
-  const { state } = useContext(UserContext)
+  // const { state } = useContext(UserContext)
+  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
 
   // const [showMenu, setShowMenu] = useState(false);
 
@@ -30,7 +32,7 @@ const RenderUser = () => {
       </div>
     );
   } else*/
-  if (state.userType === "faculty") {
+  if (user?.userType === "applicant") {
     return (
       <div>
         <Link to="/application-form">Create Application</Link>
@@ -48,11 +50,9 @@ const RenderUser = () => {
 
   const RenderMenu = () => {
 
-    if (state.user) {
-        
+    if (isAuthenticated) {       
       return (
         <>
-
           {/* <Link to="/logout" className="mr-5 hover:text-gray-900">Logout</Link> */}
           <Link to="/logout">
             <button className="focus:outline-none lg:text-lg lg:font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700  md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  px-8 py-1 sm:py-3 text-sm">Logout</button>
@@ -62,9 +62,7 @@ const RenderUser = () => {
     } else {
 
       return (
-
-        <>
-        
+        <> 
           <Link to="/login">
             <button className="focus:outline-none lg:text-lg font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700  md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  px-8 py-1 sm:py-3 text-sm">Sign In / Sign Up</button>
           </Link>

@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { createContext, useReducer } from "react";
+import { createContext, useEffect, useReducer } from "react";
 import {  ToastContainer } from "react-toastify";
 import { HelmetProvider } from 'react-helmet-async'
 // importing components
@@ -24,40 +24,51 @@ import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
 import './pdfWorker';
 // import Home from "./components/Home";
 // import About from "./components/About";
-// import Signup from "./components/auth/Signup";
+import Signup from "./components/auth/Signup";
+import { loadUser } from "./actions/userActions";
+import store from "./store";
+import {useDispatch,  useSelector } from "react-redux";
+import Home from "./components/Home";
 // import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
 const App = () => {
-  const token = (localStorage.getItem("jwtoken"))
-  axios.defaults.headers.common['authorization'] = `Bearer ${token}`;
-      axios.defaults.withCredentials = true;
-    
-    const [state, dispatch] = useReducer(reducer, initialState)
-    
+  axios.defaults.withCredentials = true;
+  // new
+  const dispatch = useDispatch();
+  useEffect(() => {
+    try {
+      store.dispatch(loadUser)
+    } catch (error) {
+      
+    }
+  },[])
+  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
   return (
 
     <>
       <HelmetProvider>
-        <UserContext.Provider value={{ state, dispatch }}>
+        {/* <UserContext.Provider value={{ state, dispatch }}> */}
           <Navbar />
           <Routes>
-            <Route path="/" element={state.userType === "admin" ? <AdminDashboard /> : state.userType === "faculty" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod" ? <ReviewerDashboard />  : <Login />} />
-
+            {/* <Route path="/" element={user. === "admin" ? <AdminDashboard /> : state.userType === "faculty" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
+            {/* <Route path="/" element={user?.userType === "admin" ? <AdminDashboard /> : user?.userType === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  user?.userType === "reviewer" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
+            <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" /> } />
+            
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/application-form" element={state.userType === "faculty" ? <ApplicationForm/> :  <Navigate to="/" />}/>
-            <Route exact path="/application-view/:applicationId" element={<ApplicationView/>} />
+            {/* <Route path="/application-form" element={state.userType === "faculty" ? <ApplicationForm/> :  <Navigate to="/" />}/>
+            <Route exact path="/application-view/:applicationId" element={<ApplicationView/>} /> */}
             
             {/* YET TO COMPLETE /application-edit */}
-            <Route exact path="/application-edit/:applicationId" element={(state.userType === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod")) ? <EditApplication/> : <Unauthorized />} />
+            {/* <Route exact path="/application-edit/:applicationId" element={(state.userType === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
 
             <Route path="/*" element={<ErrorPage />} />
             
             {/* <Route path="/" element={<Home />} /> */}
             {/* <Route path="/profile" element={<About />} /> */}
             {/* <Route path="/calendar" element={<CalendarView />} /> */}
-            {/* <Route path="/signup" element={<Signup />} /> */}
+            <Route path="/signup" element={<Signup />} />
             {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}
             {/* <Route path="/forgotPassword/:id/:token" element={<ForgotPassword />} /> */}
             {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}
@@ -66,7 +77,7 @@ const App = () => {
           </Routes>
           
         <Footer/>
-        </UserContext.Provider>
+        {/* </UserContext.Provider> */}
 
         <ToastContainer
           position="bottom-left"

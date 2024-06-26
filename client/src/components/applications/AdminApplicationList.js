@@ -351,7 +351,7 @@ const AdminApplicationList = () => {
 
                               {application.isApproved === "Application Sent" && (
                                 // <ApprovedByHod />
-                                <p className="text-blue-600 font-bold  whitespace-no-wrap">
+                                <p className="text-red-600 font-bold  whitespace-no-wrap">
                                   Pending
                                 </p>
                               )}

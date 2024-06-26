@@ -19,10 +19,10 @@ app.use(express.json());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 dotenv.config({path:"./.env"})
 
-// app.use((req, res, next) => {
-//   res.header('Access-Control-Allow-Credentials', true);
-//   next();
-// });
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Credentials', true);
+  next();
+});
 const connectDB = require("./DB/conn")
 require("./model/userSchema")
 require("./model/applicationSchema")

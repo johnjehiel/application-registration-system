@@ -1,28 +1,19 @@
-const jwt = require("jsonwebtoken");
+const ErrorHandler = require("../utils/ErrorHandler");
 const User = require("../model/userSchema");
+const catchAsyncError = require("./catchAsyncError");
+const jwt = require("jsonwebtoken");
 
-const Authenticate = async (req, res, next) => {
+//old
+exports.authenticate = async (req, res, next) => {
   try {
-    // const token = req.cookies.jwtoken;
-    // const token = req.headers["authorization"];
     const bearerHeader = req.headers["authorization"];
-    // console.log("bearerHeader:", bearerHeader);
-
     const bearer = bearerHeader.split(" ");
     const token = bearer[1];
-    // console.log("auth called");
-
-    // const token = req.sessionstotage.jwtoken;
-    // const token = window.sessionStorage.getItem('jwtoken');
-    // console.log(token);
     const verifyTokens = jwt.verify(token, process.env.SECRET_KEY);
-    // console.log(verifyTokens);
     const rootUser = await User.findOne({
       _id: verifyTokens._id,
       "tokens.token": token,
     });
-
-    // console.log(rootUser);
     if (!rootUser) {
       throw new Error("user not found");}
       
@@ -33,9 +24,32 @@ const Authenticate = async (req, res, next) => {
       next();
     
   } catch (error) {
+    console.log(error);
     res.status(401).send("unauthorized:No token provided");
-    // console.log(error);
   }
 };
+// new
+exports.isAuthenticatedUser = catchAsyncError( async (req, res, next) => {
+  const { token  }  = req.cookies;
+  
+  if( !token ){
+       return next(new ErrorHandler('Login first to handle this resource', 401))
+  }
 
-module.exports = Authenticate;
+  const decoded = jwt.verify(token, process.env.SECRET_KEY)
+  req.user = await User.findById(decoded.id)
+  next();
+})
+
+exports.authorizeRoles = (...roles) => {
+  return  (req, res, next) => {
+       if(!roles.includes(req.user.role)){
+           return next(new ErrorHandler(`Role ${req.user.role} is not allowed`, 401))
+       }
+       next()
+   }
+}
+
+
+
+// module.exports = Authenticate;

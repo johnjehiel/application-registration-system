@@ -4,97 +4,119 @@ const bcrypt = require("bcryptjs");
 const User = require("../model/userSchema");
 const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken")
+const sendToken = require('../utils/jwt');
+const catchAsyncError = require('../middleware/catchAsyncError');
+const ErrorHandler = require("../utils/ErrorHandler");
 
+// old
+// const register = async (req, res,next) => {
+//   try {
+//     const { name, email,institution,department, phone, userType,adminKey, password, cpassword } = req.body;
+//   // console.log(process.env.ADMIN_KEY);
+//   const hodExist = await User.findOne({ department , userType: "hod" });
 
+//     if (userType === "admin") {
 
-
-const register = async (req, res,next) => {
-  try {
-    const { name, email,institution,department, phone, userType,adminKey, password, cpassword } = req.body;
-  // console.log(process.env.ADMIN_KEY);
-  const hodExist = await User.findOne({ department , userType: "hod" });
-
-    if (userType === "admin") {
-
-      if (!name || !adminKey || !email || !phone || !userType || !password || !cpassword) {
-        return res.status(422).json({ error: "Kindly complete all fields." });
-      }else if(adminKey !== process.env.ADMIN_KEY){
-        return res.status(422).json({ error: "Provided Admin Key is Invalid." });
-      }
-    }else if(userType === "hod"){
-      if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
-        return res.status(422).json({ error: "Kindly complete all fields." });
-      }else if(hodExist){
-        return res.status(422).json({ error: `Hod for ${department} already exists` });
-      }
-    }else{
-      if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
-        return res.status(422).json({ error: "Kindly complete all fields." });
-      }
-    }
+//       if (!name || !adminKey || !email || !phone || !userType || !password || !cpassword) {
+//         return res.status(422).json({ error: "Kindly complete all fields." });
+//       }else if(adminKey !== process.env.ADMIN_KEY){
+//         return res.status(422).json({ error: "Provided Admin Key is Invalid." });
+//       }
+//     }else if(userType === "hod"){
+//       if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
+//         return res.status(422).json({ error: "Kindly complete all fields." });
+//       }else if(hodExist){
+//         return res.status(422).json({ error: `Hod for ${department} already exists` });
+//       }
+//     }else{
+//       if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
+//         return res.status(422).json({ error: "Kindly complete all fields." });
+//       }
+//     }
 
    
     
-    // Regular expression to validate full name with at least two words separated by a space
-    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+//     // Regular expression to validate full name with at least two words separated by a space
+//     const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
   
-    if (!nameRegex.test(name)) {
-      return res.status(422).json({ error: "Kindly provide your complete name." });
-    }
-    // Regular expression to validate email format
-    const emailRegex = /^\S+@\S+\.\S+$/;
+//     if (!nameRegex.test(name)) {
+//       return res.status(422).json({ error: "Kindly provide your complete name." });
+//     }
+//     // Regular expression to validate email format
+//     const emailRegex = /^\S+@\S+\.\S+$/;
   
-    if (!emailRegex.test(email)) {
-      return res.status(422).json({ error: "Kindly provide a valid email address." });
-    }
+//     if (!emailRegex.test(email)) {
+//       return res.status(422).json({ error: "Kindly provide a valid email address." });
+//     }
     
-    const acropolisEmailRegex = /@acropolis\.in$/;
-    const acropolisEduEmailRegex = /@acropolis\.edu\.in$/;
+//     const acropolisEmailRegex = /@acropolis\.in$/;
+//     const acropolisEduEmailRegex = /@acropolis\.edu\.in$/;
 
-    // if (!acropolisEmailRegex.test(email) && !acropolisEduEmailRegex.test(email) ) {
-    //   return res.status(422).json({ error: "Kindly provide a email address associated with Acropolis Institute" });
-    // }
-    // Phone validation
-    if (phone.length !== 10) {
-      return res.status(422).json({ error: "Kindly enter a valid 10-digit phone number." });
-    }
+//     // if (!acropolisEmailRegex.test(email) && !acropolisEduEmailRegex.test(email) ) {
+//     //   return res.status(422).json({ error: "Kindly provide a email address associated with Acropolis Institute" });
+//     // }
+//     // Phone validation
+//     if (phone.length !== 10) {
+//       return res.status(422).json({ error: "Kindly enter a valid 10-digit phone number." });
+//     }
   
-    // Password length validation
-    if (password.length < 7) {
-      return res.status(422).json({ error: "Password must contain at least 7 characters" });
-    }
+//     // Password length validation
+//     if (password.length < 7) {
+//       return res.status(422).json({ error: "Password must contain at least 7 characters" });
+//     }
   
-    if (password !== cpassword) {
-      return res.status(422).json({ error: "Password and confirm password do not match" });
-    }
+//     if (password !== cpassword) {
+//       return res.status(422).json({ error: "Password and confirm password do not match" });
+//     }
   
    
       
-      const userExist = await User.findOne({ email });
-      if (userExist) {
-        return res.status(422).json({ error: "Provide email is associated with another account." });
-      }
-       else {
-        let user
-        if (userType === "admin") {
-           user = new User({ name, email, phone, userType,adminKey,institution:"null",department:"null", password, cpassword });
+//       const userExist = await User.findOne({ email });
+//       if (userExist) {
+//         return res.status(422).json({ error: "Provide email is associated with another account." });
+//       }
+//        else {
+//         let user
+//         if (userType === "admin") {
+//            user = new User({ name, email, phone, userType,adminKey,institution:"null",department:"null", password, cpassword });
 
-        }else{
+//         }else{
         
-           user = new User({ name, email, phone, userType,institution,department,adminKey:"null" ,password, cpassword });
-        }
-        // console.log(user);
-        // Perform additional validation or data processing here
-        await user.save();
+//            user = new User({ name, email, phone, userType,institution,department,adminKey:"null" ,password, cpassword });
+//         }
+//         // console.log(user);
+//         // Perform additional validation or data processing here
+//         await user.save();
   
-        return res.status(201).json({ message: "Saved successfully" });
-      }
-    } catch (error) {
-        next(error);
-    }
-  }
+//         return res.status(201).json({ message: "Saved successfully" });
+//       }
+//     } catch (error) {
+//         next(error);
+//     }
+//   }
 
+// new
+const registerUser = catchAsyncError(async (req, res, next) => {
+    const {name, email, password, phone } = req.body
 
+    const user = await User.create({
+        name,
+        email,
+        password,
+        phone
+    });
+
+    sendToken(user, 201, res)
+
+})
+
+const getUserProfile = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user.id)
+  res.status(200).json({
+       success:true,
+       user
+  })
+})
 
   // transporter for sending email
   const transporter = nodemailer.createTransport({
@@ -487,8 +509,6 @@ const verifyEmail = async (req, res,next) => {
 
     const verifyToken = jwt.verify(token,process.env.SECRET_KEY);
 
-
-
       if (validUser && verifyToken._id) {
         const setUserToken = await User.findByIdAndUpdate({_id:validUser._id},{emailVerified:true})
         setUserToken.save()
@@ -514,53 +534,75 @@ const verifyEmail = async (req, res,next) => {
 
 
 
-const login = async (req, res,next) => {
-    // console.log(req.body);
+// const login = async (req, res,next) => {
+//     // console.log(req.body);
     
-    // res.json({message:"login success"})
-    try {
-      let token;
-      const { email, password } = req.body;
-      if (!email || !password) {
-        return res.status(400).json({ error: "Kindly complete all fields." });
-      }
+//     // res.json({message:"login success"})
+//     try {
+//       let token;
+//       const { email, password } = req.body;
+//       if (!email || !password) {
+//         return res.status(400).json({ error: "Kindly complete all fields." });
+//       }
   
-      const userLogin = await User.findOne({ email });
+//       const userLogin = await User.findOne({ email });
   
-      if (userLogin) {
-        const isMatch = await bcrypt.compare(password, userLogin.password);
-        token = await userLogin.generateAuthToken();
-        // console.log("this is login token" + token);
+//       if (userLogin) {
+//         const isMatch = await bcrypt.compare(password, userLogin.password);
+//         token = await userLogin.generateAuthToken();
+//         // console.log("this is login token" + token);
 
-        // res.cookie("jwtoken", token, {
-        //   maxAge: 900000,
-        //   // expires: new Date(Date.now() + 9000000),
-        //   path :"/",
+//         // res.cookie("jwtoken", token, {
+//         //   maxAge: 900000,
+//         //   // expires: new Date(Date.now() + 9000000),
+//         //   path :"/",
           
-        //   // domain:".onrender.com",
-        //   // expires: new Date(Date.now() + 900),
+//         //   // domain:".onrender.com",
+//         //   // expires: new Date(Date.now() + 900),
           
-        //   httpOnly: true,
-        // })
+//         //   httpOnly: true,
+//         // })
 
-        // window.sessionStorage.setItem("jwtoken", data.token);
+//         // window.sessionStorage.setItem("jwtoken", data.token);
        
-        if (!isMatch) {
-          res.status(400).json({ error: "Invalid Credentials" });
-        } else {
-          res.status(200).json({ userLogin, token: token, message: "User logged in successfully" });
-          // res.status(200)
-          // .send(userLogin).json({ message: "user login successfully" })
-        }
-      } else {
-        res.status(400).json({ error: "Invalid Credentials" });
-      }
+//         if (!isMatch) {
+//           res.status(400).json({ error: "Invalid Credentials" });
+//         } else {
+//           console.log(userLogin);
+//           res.status(200).json({ userLogin, token: token, message: "User logged in successfully" });
+//           // res.status(200)
+//           // .send(userLogin).json({ message: "user login successfully" })
+//         }
+//       } else {
+//         res.status(400).json({ error: "Invalid Credentials" });
+//       }
       
-    } catch (error) {
-        next(error);
-    }
-  }
+//     } catch (error) {
+//         next(error);
+//     }
+//   }
 
+  const loginUser = catchAsyncError(async (req, res, next) => {
+    const {email, password} =  req.body
+
+    if(!email || !password) {
+        return next(new ErrorHandler('Please enter email & password', 400))
+    }
+
+    //finding the user database
+    const user = await User.findOne({email}).select('+password');
+
+    if(!user) {
+        return next(new ErrorHandler('Invalid email or password', 401))
+    }
+    
+    if(!await user.isValidPassword(password)){
+        return next(new ErrorHandler('Invalid email or password', 401))
+    }
+
+    sendToken(user, 201, res)
+    
+})
 
 
 
@@ -571,11 +613,13 @@ const login = async (req, res,next) => {
   }
   
   //get user data for contact us and home page
-  const getdata = async (req, res) => {
-        // console.log("getdata page");
-        // console.log(req.rootUser);
-    res.send(req.rootUser);
-  }
+  const getdata = catchAsyncError(async (req, res, next) => {
+    const user = await User.findById(req.user.id)
+    res.status(200).json({
+         success:true,
+         user
+    })
+ })
 
 
 
@@ -610,26 +654,53 @@ const login = async (req, res,next) => {
   
 
   
-  const logout = async (req, res, next) => {
-    // const userId = req.userId; // get the userId from the request header
-    try {
-      const userId = req.params.userId;
-      // remove the user token from the database
-      const user = await User.findByIdAndUpdate(
-        {_id: userId},
-        { $unset: { tokens: 1 } },
-        { new: true }
-      );
+  // const logout = async (req, res, next) => {
+  //   // const userId = req.userId; // get the userId from the request header
+  //   try {
+  //     const userId = req.params.userId;
+  //     // remove the user token from the database
+  //     const user = await User.findByIdAndUpdate(
+  //       {_id: userId},
+  //       { $unset: { tokens: 1 } },
+  //       { new: true }
+  //     );
   
-      // clear the cookie
-      // res.clearCookie("jwtoken",{path:"/"});
+  //     // clear the cookie
+  //     // res.clearCookie("jwtoken",{path:"/"});
 
   
-      res.status(200).send("User logged out successfully");
-    } catch (error) {
-      next(error);
-      res.status(500).json({ error: "Internal server error" });
-    }
-  }
+  //     res.status(200).send("User logged out successfully");
+  //   } catch (error) {
+  //     next(error);
+  //     res.status(500).json({ error: "Internal server error" });
+  //   }
+  // }
   
-module.exports = { register, login, about, getdata, contact ,logout,passwordLink,forgotPassword,setNewPassword,emailVerificationLink,verifyEmail};
+const logoutUser = (req, res, next) => {
+    res.cookie('token',null, {
+        expires: new Date(Date.now()),
+        httpOnly: true
+    })
+    .status(200)
+    .json({
+        success: true,
+        message: "Loggedout"
+    })
+
+}
+
+module.exports = { 
+                  // register, 
+                  registerUser,
+                  // login,
+                  loginUser, 
+                  about, 
+                  getdata, 
+                  contact,
+                  // logout,
+                  logoutUser,
+                  passwordLink,
+                  forgotPassword,
+                  setNewPassword,
+                  emailVerificationLink,
+                  verifyEmail};

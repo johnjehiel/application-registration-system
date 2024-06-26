@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../LoadingSpinner";
@@ -81,13 +81,16 @@ const Signup = () => {
   const { loading, error, isAuthenticated } = useSelector(state => state.authState);
 
   const submitHandler = (e) => {
+        console.log("SUbmitting");
         e.preventDefault();
+        setIsLoading(true);
         const formData = new FormData();
         formData.append('name', user.name)
         formData.append('email', user.email)
         formData.append('password', user.password)
         formData.append('phone', user.phone);
         dispatch(register(formData))
+        setIsLoading(false);
     }
 
     useEffect(()=>{
@@ -108,7 +111,7 @@ const Signup = () => {
   return (
     <>
       <MetaData title={"Sign up"} />
-      {isLoading ? (
+      {(isLoading || loading) ? (
         <LoadingSpinner />
       ) : (
         <section className="text-gray-600 body-font my-10  min-h-screen flex items-center justify-center bg-white">
@@ -216,7 +219,7 @@ const Signup = () => {
                     type="submit"
                     onClick={submitHandler}
                     className="text-white bg-indigo-600 shadow focus:shadow-outline focus:outline-none border-0 py-2 px-10 font-bold  hover:bg-indigo-800 rounded text-lg"
-                    disabled={loading}
+                    // disabled={loading}
                     >
                     Sign Up
                   </button>

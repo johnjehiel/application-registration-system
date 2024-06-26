@@ -1,23 +1,23 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "./../../App";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
-import { login } from "../../actions/userActions";
+import { clearAuthError, login } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
 
-  const { dispatch } = useContext(UserContext)
+  // const { dispatch } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState("");
-
+  /*
   const loginUser = async (e) => {
     e.preventDefault();
     setIsLoading(true)
@@ -66,15 +66,23 @@ const Login = () => {
       }
     }
   };
-  /*
+  */
   const dispatch = useDispatch();
   const location = useLocation();
   
-  const { loading, error, isAuthenticated } = useSelector(state => state.authState);
-
-  const LoginUserNew = (e) => {
-    e.preventDefault();
-    dispatch(login(email, password));
+  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
+  // new
+  const loginUser = (e) => {
+    try {
+      e.preventDefault();
+      setIsLoading(true);
+      dispatch(login(email, password));
+    } catch (error) {}
+    finally {
+      setIsLoading(false);
+      if (user)
+        toast.success("Logged In Successfully")
+    }
   }
 
   useEffect(() => {
@@ -91,12 +99,11 @@ const Login = () => {
             return
         }
     },[error, isAuthenticated, dispatch, navigate])
-    */
 
   return (
     <>
     <MetaData title={`Sign In`} />
-    {isLoading ? (
+    {(isLoading || loading) ? (
       <LoadingSpinner />
     ) :
       <section className="text-gray-600 body-font min-h-screen flex items-center justify-center bg-white">
@@ -179,7 +186,7 @@ const Login = () => {
                 </button>
               </div>
             </div>
-            {/* <div className="mt-4 text-center">
+            <div className="mt-4 text-center">
               <p className="text-m">
                 Don't have an account yet?{" "}
                 <Link to="/signup" className="text-blue-600 hover:underline">
@@ -187,7 +194,7 @@ const Login = () => {
                   Sign Up
                 </Link>
               </p>
-            </div> */}
+            </div>
           </form>
 
         </div>

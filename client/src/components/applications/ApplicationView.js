@@ -239,24 +239,27 @@ const ApplicationView = () => {
                     <h1 className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
                       Attached File
                     </h1>
-                    <div className="appearance-none block w-full text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                      <Document
+                    <div className="appearance-none block w-full h-screen text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                      {/* // pdf viewing format 1.1
+                        <Document
                         file={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}
                         onLoadSuccess={({ numPages }) => console.log(`Loaded PDF with ${numPages} pages.`)}
                         >
                         <Page pageNumber={1} />
-                      </Document>
+                      </Document> */}
+                      <iframe className="w-full h-full" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`} ></iframe>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* pdf viewing format 2 */}
+              {/* //pdf viewing format 2 
               {
                 applicationData.pdfFile  && applicationData.pdfFile.filename && (
                   <PdfComp fileURL={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}/>
                 )
               }
+              */}
 
               {applicationData.rejectionReason && (
                 <div className="flex flex-wrap -mx-3 mb-6">

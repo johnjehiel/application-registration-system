@@ -4,8 +4,10 @@ import { UserContext } from './../../App'
 import { toast } from "react-toastify";
 import axios from "axios";
 import LoadingSpinner from "../LoadingSpinner";
-  
+import {useDispatch, useSelector} from 'react-redux';
+import { logout } from '../../actions/userActions';
 
+/*
 const Logout = () => {
   const { dispatch } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(true);
@@ -55,6 +57,27 @@ const userId = localStorage.getItem("userId")
   return (<>
      {isLoading ? <LoadingSpinner /> : null}
 
+  </>
+  )
+}
+*/
+
+const Logout = () => {
+  const { loading } = useSelector(state => state.authState);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(logout);
+    setIsLoading(false);
+    // toast.success("Logged Out Successfully")
+    navigate("/login", { replace: true })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  return (<>
+     {(isLoading || loading) ? <LoadingSpinner /> : null}
   </>
   )
 }

@@ -41,7 +41,7 @@ import {
 
 } from '../slices/userSlice'
 import axios from 'axios';
-
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2N2MzNGY3MDRhYjc0ZDMzNWQzZjhiYSIsImlhdCI6MTcxOTQxNjA1NSwiZXhwIjoxNzIwMDIwODU1fQ.QUE5oTEje5rNfbR_TL3l3H9D6r4X28nEh6AyuCt-kNo
 export const login = (email, password) => async (dispatch) => {
 
         try {
@@ -83,7 +83,7 @@ export const loadUser =  async (dispatch) => {
         dispatch(loadUserRequest())
        
 
-        const { data }  = await axios.get(`/api/v1/myprofile`);
+        const { data }  = await axios.get(`/getdata`);
         dispatch(loadUserSuccess(data))
     } catch (error) {
         dispatch(loadUserFail(error.response.data.message))
@@ -94,7 +94,7 @@ export const loadUser =  async (dispatch) => {
 export const logout =  async (dispatch) => {
 
     try {
-        await axios.get(`/api/v1/logout`);
+        await axios.get(`/logout`);
         dispatch(logoutSuccess())
     } catch (error) {
         dispatch(logoutFail)

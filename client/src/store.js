@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { thunk } from "redux-thunk";
+// import thunk from "redux-thunk";
 import authReducer from './slices/authSlice';
 import userReducer from './slices/userSlice'
 
@@ -13,6 +14,7 @@ const reducer = combineReducers({
 const store = configureStore({
     reducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(thunk)
+    // middleware: [thunk]
 })
 
 export default store;

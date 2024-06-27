@@ -41,12 +41,12 @@ const Login = () => {
 
       dispatch({ type: "USER", payload: true })
 
-      if (data.userLogin.userType === 'admin') {
+      if (data.userLogin.role === 'admin') {
         dispatch({ type: 'USER_TYPE', payload: "admin" });
-      } else if (data.userLogin.userType === 'hod') {
+      } else if (data.userLogin.role === 'hod') {
         dispatch({ type: 'USER_TYPE', payload: "hod" });
       } else {
-        dispatch({ type: 'USER_TYPE', payload: "faculty" });
+        dispatch({ type: 'USER_TYPE', payload: "applicant" });
       }
 
       localStorage.setItem("userId", data.userLogin._id)

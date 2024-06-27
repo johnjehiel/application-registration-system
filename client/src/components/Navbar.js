@@ -19,20 +19,20 @@ const Navbar = () => {
   };
   //consolelog(state);
 
-// const dashboard = userType.charAt(0).toUpperCase() + userType.slice(1);
+// const dashboard = role.charAt(0).toUpperCase() + role.slice(1);
 // //consolelog(dashboard); 
 
 // "Admin"
 
 const RenderUser = () => {
-  /*if (state.userType === "admin") {
+  /*if (state.role === "admin") {
     return (
       <div>
         <Link to="/halls">Halls</Link>
       </div>
     );
   } else*/
-  if (user?.userType === "applicant") {
+  if (user?.role === "applicant") {
     return (
       <div>
         <Link to="/application-form">Create Application</Link>

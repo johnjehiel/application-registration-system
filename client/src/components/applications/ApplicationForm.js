@@ -6,81 +6,100 @@ import axios from "axios";
 
 import notVerified from "../../assets/notVerified.jpg";
 import MetaData from "../layouts/MetaData";
+import { useSelector } from 'react-redux';
+
+// const ApplicationForm = () => {
+//   return <h1>applicantion form</h1>
+// }
+
 const ApplicationForm = () => {
+  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
   const navigate = useNavigate();
   const [authStatus, setAuthStatus] = useState("");
-  const [emailVerified, setEmailVerified] = useState(false);
+//   const [emailVerified, setEmailVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [file, setFile] = useState(null);
   const [applicationData, setApplicationData] = useState({
-    userId: "",
-    applicantName: "",
+    userId: user ? user._id : "",
+    applicantName: user ? user.name : "",
     applicationName: "",
-    email: "",
-    userType: "",
-    phoneNumber: "",
+    email: user ? user.email : "",
+    role: user ? user.role : "",
+    phoneNumber: user ? user.phone : "",
     altNumber: "",
     description: "",
-    isApproved: "",
+    // isApproved: "",
   });
   let characterLimit = 300;
 
-  const userContact = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_SERVER_URL}/getdata`,
-        {
-          withCredentials: true, // include credentials in the request
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-    //   console.log("response.data", response.data);
-      const data = response.data;
-      //consolelog(data);
+//   const userContact = async () => {
+//     try {
+//       const response = await axios.get(
+//         `${process.env.REACT_APP_SERVER_URL}/getdata`,
+//         {
+//           withCredentials: true, // include credentials in the request
+//           headers: {
+//             "Content-Type": "application/json",
+//           },
+//         }
+//       );
+//     //   console.log("response.data", response.data);
+//       const data = response.data;
+//       //consolelog(data);
 
-      let status;
-      // if(data.userType === "admin"){
-      //   status = "Approved By Admin"
-      // }else if (data.userType === "hod"){
-      //   status = "Approved By HOD"
-      // }
+//       let status;
+//       // if(data.role === "admin"){
+//       //   status = "Approved By Admin"
+//       // }else if (data.role === "hod"){
+//       //   status = "Approved By HOD"
+//       // }
 
-      if (data.emailVerified) {
-        setEmailVerified(true);
-      }
+// //       if (data.emailVerified) {
+// //         setEmailVerified(true);
+// //       }
 
-      setApplicationData({
+//       setApplicationData({
+//         ...applicationData,
+//         userId: data._id,
+//         applicantName: data.name,
+//         email: data.email,
+//         // department: data.department,
+//         // institution: data.institution,
+//         role: data.role,
+//         description: data.description,
+//         isApproved: status,
+//         phoneNumber: data.phone.toString(),
+//       });
+
+//       setIsLoading(false);
+
+//       if (response.status !== 200) {
+//         throw new Error(response.error);
+//       }
+//     } catch (error) {
+//       // //consolelog(error);
+//       navigate("/login");
+//     }
+//   };
+
+  const InitializeApplicationData = () => {
+    setApplicationData({
         ...applicationData,
-        userId: data._id,
-        applicantName: data.name,
-        email: data.email,
-        // department: data.department,
-        // institution: data.institution,
-        userType: data.userType,
-        description: data.description,
-        isApproved: status,
-        phoneNumber: data.phone.toString(),
-      });
-
-      setIsLoading(false);
-
-      if (response.status !== 200) {
-        throw new Error(response.error);
-      }
-    } catch (error) {
-      // //consolelog(error);
-      navigate("/login");
-    }
-  };
-
+        userId: user ? user._id : "",
+        applicantName: user ? user.name : "",
+        email: user ? user.email : "",
+        role: user ? user.role : "",
+        phoneNumber: user ? user.phone.toString() : "",
+    })
+  }
   useEffect(() => {
-    userContact();
+    setIsLoading(true);
+    InitializeApplicationData();
+    setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // handle change here
+//   // handle change here
 
   const handleInputs = (e) => {
     const name = e.target.name;
@@ -108,27 +127,14 @@ const ApplicationForm = () => {
       applicantName,
       applicationName,
       userId,
-    //   department,
-    //   institution,
-    //   eventName,
-    //   eventDateType,
-    //   eventDate,
-    //   eventStartDate,
-    //   eventEndDate,
-    //   startTime,
-    //   endTime,
       email,
-      userType,
-    //   bookedHallId,
-
-    //   bookedHallName,
-    //   organizingClub,
+      role,
       phoneNumber,
       altNumber,
       description,
-      isApproved,
+      // isApproved,
     } = applicationData;
-
+    console.log(applicationData)
     if (!applicantName || !phoneNumber || !applicationName) {
         setIsLoading(false);
         return toast.error("Please fill all details");
@@ -172,12 +178,12 @@ const ApplicationForm = () => {
           applicantName,
           applicationName,
           email,
-          userType,
+          role,
           phoneNumber,
           altNumber,
           file,
           description,
-          isApproved,
+          // isApproved,
         },
         {
           withCredentials: true, // To include credentials in the request
@@ -193,7 +199,7 @@ const ApplicationForm = () => {
         toast.success("Application created successfully!");
         navigate("/");
       } else {
-        toast.error("Request not sent!");
+        toast.error("Application not sent!");
       }
     } catch (error) {
       if (error.response) {
@@ -225,27 +231,6 @@ const ApplicationForm = () => {
       <MetaData title={`Application Form`} />
       {isLoading ? (
         <LoadingSpinner />
-      ) : !emailVerified ? (
-        <div className="flex items-center flex-col justify-center lg:flex-row py-28 px-6 md:px-24 md:py-20 lg:py-32 gap-16 lg:gap-28">
-          <div className="w-full lg:w-1/3">
-            <img alt="error" className="hidden lg:block" src={notVerified} />
-          </div>
-          <div className="w-full lg:w-1/2">
-            <h1 className="py-4 text-3xl lg:text-4xl font-extrabold text-gray-800 ">
-              Looks Like Yout Have Not Verified Your Email!
-            </h1>
-            <p className="py-4 text-xl text-gray-800">
-              Please click on the below button and verify email before booking.
-            </p>
-            <div>
-              <Link to="/profile">
-                <button className="w-full lg:w-auto my-4 rounded-md px-1 sm:px-16 py-5 bg-indigo-600 text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-opacity-50">
-                  Verify Email
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
       ) : (
         <div>
           <div className="max-w-screen-md mx-auto p-5 my-10 bg-white shadow-2xl shadow-blue-200">
@@ -394,7 +379,8 @@ const ApplicationForm = () => {
             </form>
           </div>
         </div>
-      )}
+      )
+      }
     </>
   );
 };

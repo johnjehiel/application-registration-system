@@ -1,7 +1,7 @@
 
 
 const storedUser = localStorage.getItem("user");
-const storedUserType = localStorage.getItem("userType");
+const storedrole = localStorage.getItem("role");
 
 // set the initial state to the stored value, or to null if no value is found
 //consolelog(storedUser);
@@ -12,10 +12,10 @@ const storedUserType = localStorage.getItem("userType");
 const jwtoken = localStorage.getItem("jwtoken");
 
 //consolelog(jwtoken);
-export const initialState = jwtoken  ? { user: JSON.parse(storedUser), userType: storedUserType } : { user: null, userType: null };
+export const initialState = jwtoken  ? { user: JSON.parse(storedUser), role: storedrole } : { user: null, role: null };
 
 
-// export const initialState = storedUser ? { user: JSON.parse(storedUser), userType:storedUserType} : { user: null, userType: null };
+// export const initialState = storedUser ? { user: JSON.parse(storedUser), role:storedrole} : { user: null, role: null };
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -25,8 +25,8 @@ export const reducer = (state, action) => {
       return { ...state, user: action.payload } ;
     case "USER_TYPE":
       // store the user type in localStorage
-      localStorage.setItem("userType", action.payload);
-      return { ...state, userType: action.payload };
+      localStorage.setItem("role", action.payload);
+      return { ...state, role: action.payload };
     default:
       return state;
   }

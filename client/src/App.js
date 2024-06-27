@@ -29,6 +29,7 @@ import { loadUser } from "./actions/userActions";
 import store from "./store";
 import {useDispatch,  useSelector } from "react-redux";
 import Home from "./components/Home";
+import ProtectedRoute from "./route/ProtectedRoute";
 // import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
@@ -51,17 +52,17 @@ const App = () => {
         {/* <UserContext.Provider value={{ state, dispatch }}> */}
           <Navbar />
           <Routes>
-            {/* <Route path="/" element={user. === "admin" ? <AdminDashboard /> : state.userType === "faculty" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
-            {/* <Route path="/" element={user?.userType === "admin" ? <AdminDashboard /> : user?.userType === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  user?.userType === "reviewer" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
-            <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" /> } />
+            {/* <Route path="/" element={user.role === "admin" ? <AdminDashboard /> : state.role === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
+            <Route path="/" element={user?.role === "admin" ? <AdminDashboard /> : user?.role === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  user?.role === "reviewer" ? <ReviewerDashboard />  : <Navigate to='/login'/>} />
+            {/* <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" /> } /> */}
             
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            {/* <Route path="/application-form" element={state.userType === "faculty" ? <ApplicationForm/> :  <Navigate to="/" />}/>
-            <Route exact path="/application-view/:applicationId" element={<ApplicationView/>} /> */}
+            <Route path="/application-form" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicationForm/></ProtectedRoute>}/>
+            <Route exact path="/application-view/:applicationId" element={<ProtectedRoute allowedRoles={['applicant', "reviewer", "admin"]}><ApplicationView/></ProtectedRoute>} />
             
             {/* YET TO COMPLETE /application-edit */}
-            {/* <Route exact path="/application-edit/:applicationId" element={(state.userType === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.userType === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
+            {/* <Route exact path="/application-edit/:applicationId" element={(state.role === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
 
             <Route path="/*" element={<ErrorPage />} />
             

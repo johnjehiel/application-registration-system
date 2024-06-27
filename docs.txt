@@ -20,7 +20,7 @@ reviewer creation
 font: mukta, 
 
 userschema:
--name, email, phone number, userType/role(enum), password, timestamps=true
+-name, email, phone number, role/role(enum), password, timestamps=true
 applicationschema:
 -userId, applicantName, applicationName, email, phno, altno, upload pdf, description, rejectionreason, isapproved(enum), timestamps=true
 

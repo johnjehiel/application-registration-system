@@ -19,17 +19,22 @@ import {
   RejectedByAdmin,
   RejectedByHod,
 } from "../Steps";
+import { useSelector } from 'react-redux';
 import PdfComp from "../pdfComp";
-
+  
 
 const ApplicationView = () => {
+
+  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
+
+
   const navigate = useNavigate();
   const { applicationId } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [applicationData, setApplicationData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
-  const { state } = useContext(UserContext);
+  // const { state } = useContext(UserContext);
 
   const openModal = (applicationId) => {
     setShowModal(true);
@@ -297,7 +302,7 @@ const ApplicationView = () => {
               </div>
               <div className="px-5 py-5 text-l flex font-bold  bg-white justify-between border-gray-200">
                 
-                {state.userType === "admin" && (
+                {user.role === "admin" && (
                   <>
                     {
                       applicationData.isApproved !== "Approved By Admin" &&
@@ -320,7 +325,7 @@ const ApplicationView = () => {
                   </>
                 )}
 
-                {state.userType === "hod" && (
+                {user.role === "hod" && (
                   <>
                     {/* <button
                       onClick={() => handleEditClick(applicationData._id)}

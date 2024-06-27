@@ -10,17 +10,17 @@ exports.authenticate = async (req, res, next) => {
     const bearer = bearerHeader.split(" ");
     const token = bearer[1];
     const verifyTokens = jwt.verify(token, process.env.SECRET_KEY);
-    const rootUser = await User.findOne({
+    const user = await User.findOne({
       _id: verifyTokens._id,
       "tokens.token": token,
     });
-    if (!rootUser) {
+    if (!user) {
       throw new Error("user not found");}
       
       req.token = token;
 
-      req.rootUser = rootUser;
-      req.userID = rootUser._id;
+      req.user = user;
+      req.userID = user._id;
       next();
     
   } catch (error) {
@@ -34,6 +34,7 @@ exports.isAuthenticatedUser = catchAsyncError( async (req, res, next) => {
   
   if( !token ){
        return next(new ErrorHandler('Login first to handle this resource', 401))
+      //  return res.status(401).json({message: 'Login first to handle this resource'})
   }
 
   const decoded = jwt.verify(token, process.env.SECRET_KEY)

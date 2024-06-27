@@ -4,7 +4,7 @@ const path = require('path')
 
 const router = express.Router();
 const applicationController = require('../controllers/applicationController');
-const { authenticate } = require("../middleware/authenticate");
+const { authenticate, isAuthenticatedUser } = require("../middleware/authenticate");
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -18,14 +18,15 @@ const storage = multer.diskStorage({
   const upload = multer({ storage });
 
 
-router.get('/applications', authenticate, applicationController.getApplications);
-router.post('/application-form', authenticate, upload.single("file"), applicationController.createNewApplication);
-router.get('/applicant-applications',authenticate,  applicationController.getApplicationByUserId);
-router.get('/application-view/:applicationId',authenticate, applicationController.getApplicationById);
-router.put('/application-edit/:applicationId',authenticate, applicationController.updateApplication);
+router.get('/applications', isAuthenticatedUser, applicationController.getApplications);
+router.post('/application-form', isAuthenticatedUser, upload.single("file"), applicationController.createNewApplication);
+// router.get('/applicant-applications',authenticate,  applicationController.getApplicationByUserId);
+router.get('/applicant-applications',isAuthenticatedUser,  applicationController.getApplicationByUserId);
+router.get('/application-view/:applicationId',isAuthenticatedUser, applicationController.getApplicationById);
+router.put('/application-edit/:applicationId',isAuthenticatedUser, applicationController.updateApplication);
 
-router.get('/application-for-reviewer', authenticate, applicationController.getApplicationForReviewer);
-router.get('/application-for-admin', authenticate, applicationController.getApplicationForAdmin);
+router.get('/application-for-reviewer', isAuthenticatedUser, applicationController.getApplicationForReviewer);
+router.get('/application-for-admin', isAuthenticatedUser, applicationController.getApplicationForAdmin);
 
 
 module.exports = router;

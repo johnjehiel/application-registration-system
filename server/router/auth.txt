@@ -108,13 +108,13 @@ router.post("/login", async (req, res) => {
 
 router.get("/about", authenticate, (req, res) => {
   // console.log("about page");
-  res.send(req.rootUser);
+  res.send(req.user);
 });
 
 //get user data for contact us and home page
 router.get("/getdata", authenticate, (req, res) => {
   // console.log("getdata page");
-  res.send(req.rootUser);
+  res.send(req.user);
 });
 
 // contact us page

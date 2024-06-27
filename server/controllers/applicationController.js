@@ -118,8 +118,9 @@ const createNewApplication = async (req, res, next) => {
       phoneNumber,
       altNumber,
       description,
-      isApproved
+      // isApproved
     } = req.body;
+    console.log(req.body);
     //  console.log(req.body);
     const title = req.file?.originalname;
     const filename =  req.file?.filename;
@@ -170,7 +171,7 @@ const createNewApplication = async (req, res, next) => {
       altNumber,
       pdfFile,
       description,
-      isApproved
+      // isApproved
     });
     await application.save();
 
@@ -197,10 +198,10 @@ const getApplications = async (req, res, next) => {
 const getApplicationByUserId = async (req, res, next) => {
   try {
     // const { userId } = req.params;
-    const userId = req.rootUser._id
+    const userId = req.user._id
     const application = await Application.find({ userId }).populate({
       path: 'userId',
-      select: '-password -cpassword -tokens -verifyToken' // Exclude the password and cpassword fields
+      select: '-password' // Exclude the password and cpassword fields
     });
     // if (!mongoose.Types.ObjectId.isValid(userId)) {
     //   return res.status(400).json({ message: 'Invalid userId' });
@@ -284,7 +285,7 @@ const updateApplication = async (req, res, next) => {
 };
 
 const getApplicationForReviewer = async (req, res, next) => {
-  const hodDepartment = req.rootUser.department
+  const hodDepartment = req.user.department
   // console.log(hodDepartment);
   try {
     const application = await Application.find();
@@ -298,8 +299,8 @@ const getApplicationForReviewer = async (req, res, next) => {
 const getApplicationForAdmin = async (req, res, next) => {
   try {
     let statusArray = ["Application Sent", "Approved By HOD", "Rejected By HOD", "Approved By Admin", "Rejected By Admin"];
-    const adminEmail = req.rootUser.email;
-    const userId = req.rootUser._id;
+    const adminEmail = req.user.email;
+    const userId = req.user._id;
 
     if (process.env.REACT_APP_HOD_FEATURE != "true") {
       statusArray.unshift("Request Sent"); // Add "Request Sent" at the beginning if HOD feature is on

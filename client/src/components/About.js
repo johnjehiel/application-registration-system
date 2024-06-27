@@ -114,11 +114,11 @@ const About = () => {
                   </h2>
                   <p className="mt-2 text-l font-semibold text-zinc-700">
                     {" "}
-                    {userData.userType === "hod"
+                    {userData.role === "hod"
                       ? `Head of ${userData.department} Department`
-                      : userData.userType === "faculty"
-                      ? `Faculty of ${userData.department} Department`
-                      : userData.userType === "admin"
+                      : userData.role === "applicant"
+                      ? `applicant of ${userData.department} Department`
+                      : userData.role === "admin"
                       ? "Admin"
                       : ""}
                   </p>
@@ -145,7 +145,7 @@ const About = () => {
                   </div>
                 </div>
 
-                {userData.userType !== "admin" && (
+                {userData.role !== "admin" && (
                  <>
                  <div className="mt-6 grid grid-cols-3 gap-8  text-center items-center lg:text-left">
                <div>

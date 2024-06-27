@@ -11,25 +11,25 @@ const ErrorHandler = require("../utils/ErrorHandler");
 // old
 // const register = async (req, res,next) => {
 //   try {
-//     const { name, email,institution,department, phone, userType,adminKey, password, cpassword } = req.body;
+//     const { name, email,institution,department, phone, role,adminKey, password, cpassword } = req.body;
 //   // console.log(process.env.ADMIN_KEY);
-//   const hodExist = await User.findOne({ department , userType: "hod" });
+//   const hodExist = await User.findOne({ department , role: "hod" });
 
-//     if (userType === "admin") {
+//     if (role === "admin") {
 
-//       if (!name || !adminKey || !email || !phone || !userType || !password || !cpassword) {
+//       if (!name || !adminKey || !email || !phone || !role || !password || !cpassword) {
 //         return res.status(422).json({ error: "Kindly complete all fields." });
 //       }else if(adminKey !== process.env.ADMIN_KEY){
 //         return res.status(422).json({ error: "Provided Admin Key is Invalid." });
 //       }
-//     }else if(userType === "hod"){
-//       if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
+//     }else if(role === "hod"){
+//       if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
 //         return res.status(422).json({ error: "Kindly complete all fields." });
 //       }else if(hodExist){
 //         return res.status(422).json({ error: `Hod for ${department} already exists` });
 //       }
 //     }else{
-//       if (!name || !institution || !department || !email || !phone || !userType || !password || !cpassword) {
+//       if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
 //         return res.status(422).json({ error: "Kindly complete all fields." });
 //       }
 //     }
@@ -77,12 +77,12 @@ const ErrorHandler = require("../utils/ErrorHandler");
 //       }
 //        else {
 //         let user
-//         if (userType === "admin") {
-//            user = new User({ name, email, phone, userType,adminKey,institution:"null",department:"null", password, cpassword });
+//         if (role === "admin") {
+//            user = new User({ name, email, phone, role,adminKey,institution:"null",department:"null", password, cpassword });
 
 //         }else{
         
-//            user = new User({ name, email, phone, userType,institution,department,adminKey:"null" ,password, cpassword });
+//            user = new User({ name, email, phone, role,institution,department,adminKey:"null" ,password, cpassword });
 //         }
 //         // console.log(user);
 //         // Perform additional validation or data processing here
@@ -294,7 +294,7 @@ const getUserProfile = catchAsyncError(async (req, res, next) => {
                     <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.name}</h1>
                     <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.email}</h1>
                     <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.phone}</h1>
-                         <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.userType}</h1>
+                         <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.role}</h1>
                     <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.institution}</h1>
                     <h1 style="font-size: 20px; color: #202225; margin-top: 0;">${userFind.department}</h1>
                   </div>
@@ -609,12 +609,12 @@ const verifyEmail = async (req, res,next) => {
 
   const about = async (req, res) => {
     // console.log("about page");
-    res.send(req.rootUser);
+    res.send(req.user);
   }
   
   //get user data for contact us and home page
   const getdata = catchAsyncError(async (req, res, next) => {
-    const user = await User.findById(req.user.id)
+    const user = await User.findById(req.user.id).select("-password")
     res.status(200).json({
          success:true,
          user

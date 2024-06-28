@@ -7,6 +7,7 @@ const jwt = require("jsonwebtoken")
 const sendToken = require('../utils/jwt');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require("../utils/ErrorHandler");
+const { ROLES } = require("../utils/Constants");
 
 // old
 const register = async (req, res,next) => {
@@ -15,7 +16,7 @@ const register = async (req, res,next) => {
   // console.log(process.env.ADMIN_KEY);
   const hodExist = await User.findOne({ department , role: "hod" });
 
-    if (role === "admin") {
+    if (role === ROLES.admin) {
 
       if (!name || !adminKey || !email || !phone || !role || !password || !cpassword) {
         return res.status(422).json({ error: "Kindly complete all fields." });
@@ -77,7 +78,7 @@ const register = async (req, res,next) => {
       }
        else {
         let user
-        if (role === "admin") {
+        if (role === ROLES.admin) {
            user = new User({ name, email, phone, role,adminKey,institution:"null",department:"null", password, cpassword });
 
         }else{

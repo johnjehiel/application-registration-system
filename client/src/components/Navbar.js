@@ -2,6 +2,7 @@ import React, { useContext   } from "react";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.png'
 import { useSelector } from "react-redux";
+import { ROLES } from "./Constants";
 
 
 const Navbar = () => {
@@ -23,7 +24,7 @@ const RenderUser = () => {
       </div>
     );
   } else*/
-  if (user?.role === "applicant") {
+  if (user?.role === ROLES.applicant) {
     return (
       <div>
         <Link to="/application-form">Create Application</Link>

@@ -27,11 +27,13 @@ import { loadUser } from "./actions/userActions";
 import store from "./store";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./route/ProtectedRoute";
+import { ROLES } from "./components/Constants";
+import LoadingSpinner from "./components/LoadingSpinner";
 // import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
 const App = () => {
-  const { user, isAuthenticated } = useSelector(state => state.authState)
+  const { user, isAuthenticated, loading } = useSelector(state => state.authState)
   axios.defaults.withCredentials = true;
   useEffect(() => {
     // if (isAuthenticated) {
@@ -44,21 +46,21 @@ const App = () => {
       <HelmetProvider>
           <Navbar />
           <Routes>
-            <Route path="/" element={user?.role === "admin" ? <ProtectedRoute allowedRoles={['admin']} ><AdminDashboard /></ProtectedRoute> 
-                                    : user?.role === "applicant" ? <ProtectedRoute allowedRoles={['applicant']} ><ApplicantDashboard /></ProtectedRoute> 
-                                    : user?.role === "reviewer" ? <ProtectedRoute allowedRoles={['reviewer']} ><ReviewerDashboard /></ProtectedRoute>  
-                                    : <Navigate to='/login'/>} />
+            <Route path="/" element={user?.role === ROLES.admin ? <ProtectedRoute allowedRoles={[ROLES.admin]} ><AdminDashboard /></ProtectedRoute> 
+                                    : user?.role === ROLES.applicant ? <ProtectedRoute allowedRoles={[ROLES.applicant]} ><ApplicantDashboard /></ProtectedRoute> 
+                                    : user?.role === ROLES.reviewer ? <ProtectedRoute allowedRoles={[ROLES.reviewer]} ><ReviewerDashboard /></ProtectedRoute>  
+                                    : loading ? <LoadingSpinner /> :<Navigate to='/login'/>} />
             
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
-            <Route path="/application-form" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicationForm/></ProtectedRoute>}/>
-            <Route exact path="/application-view/:applicationId" element={<ProtectedRoute allowedRoles={['applicant', "reviewer", "admin"]}><ApplicationView/></ProtectedRoute>} />
+            <Route path="/application-form" element={<ProtectedRoute allowedRoles={[ROLES.applicant]}><ApplicationForm/></ProtectedRoute>}/>
+            <Route exact path="/application-view/:applicationId" element={<ProtectedRoute allowedRoles={[ROLES.applicant, ROLES.reviewer, ROLES.admin]}><ApplicationView/></ProtectedRoute>} />
             
             <Route path="/*" element={<ErrorPage />} />
 
             {/* YET TO COMPLETE /application-edit */}
-            {/* <Route exact path="/application-edit/:applicationId" element={(state.role === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
+            {/* <Route exact path="/application-edit/:applicationId" element={(state.role === ROLES.admin || (process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
 
             
             {/* <Route path="/" element={<Home />} /> */}

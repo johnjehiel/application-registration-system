@@ -21,7 +21,7 @@ import {
 } from "../Steps";
 import { useSelector } from 'react-redux';
 // import PdfComp from "../pdfComp";
-import { APPLICATION_STATUS } from "../Constants";
+import { APPLICATION_STATUS, ROLES } from "../Constants";
 
   
 
@@ -304,7 +304,7 @@ const ApplicationView = () => {
               </div>
               <div className="px-5 py-5 text-l flex font-bold  bg-white justify-between border-gray-200">
                 
-                {user.role === "admin" && (
+                {user.role === ROLES.admin && (
                   <>
                     {
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
@@ -327,7 +327,7 @@ const ApplicationView = () => {
                   </>
                 )}
 
-                {user.role === "reviewer" && (
+                {user.role === ROLES.reviewer && (
                   <>
                     {/* <button
                       onClick={() => handleEditClick(applicationData._id)}

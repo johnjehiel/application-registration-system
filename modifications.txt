@@ -7,8 +7,8 @@ applicant - Name, email, password, phone +  validation + captcha
 userSchema => Name, email, password, phone, role, timestamps=true
 
 login:
-email, password + validation+ captcha
+email, password + validation + captcha
 
-file upload above description
-ONLY PDF
-preview the document when VIEWED (embed)
+done => file upload above description
+done => ONLY PDF
+done => preview the document when VIEWED (embed)

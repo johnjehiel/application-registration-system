@@ -1,6 +1,6 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect } from "react";
 import {  ToastContainer } from "react-toastify";
 import { HelmetProvider } from 'react-helmet-async'
 // importing components
@@ -11,14 +11,14 @@ import Login from "./components/auth/Login";
 import ErrorPage from "./components/ErrorPage";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
 import Footer from "./components/Footer";
-import { initialState, reducer } from "./reducer/UseReducer";
+// import { initialState, reducer } from "./reducer/UseReducer";
 
 import "react-toastify/dist/ReactToastify.css";
-import Unauthorized from "./components/Unauthorized";
+// import Unauthorized from "./components/Unauthorized";
 
 import ApplicationForm from "./components/applications/ApplicationForm";
 import ApplicationView from "./components/applications/ApplicationView";
-import EditApplication from "./components/applications/EditApplication";
+// import EditApplication from "./components/applications/EditApplication";
 import ReviewerDashboard from "./components/dashboard/ReviewerDashboard";
 import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
 import './pdfWorker';
@@ -27,33 +27,31 @@ import './pdfWorker';
 import Signup from "./components/auth/Signup";
 import { loadUser } from "./actions/userActions";
 import store from "./store";
-import {useDispatch,  useSelector } from "react-redux";
-import Home from "./components/Home";
+import { useSelector } from "react-redux";
+// import Home from "./components/Home";
 import ProtectedRoute from "./route/ProtectedRoute";
 // import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
 const App = () => {
+  const { user, isAuthenticated } = useSelector(state => state.authState)
   axios.defaults.withCredentials = true;
-  // new
-  const dispatch = useDispatch();
   useEffect(() => {
-    try {
+    // if (isAuthenticated) {
       store.dispatch(loadUser)
-    } catch (error) {
-      
-    }
+    // }
   },[])
-  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
   return (
 
     <>
       <HelmetProvider>
-        {/* <UserContext.Provider value={{ state, dispatch }}> */}
           <Navbar />
           <Routes>
             {/* <Route path="/" element={user.role === "admin" ? <AdminDashboard /> : state.role === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
-            <Route path="/" element={user?.role === "admin" ? <AdminDashboard /> : user?.role === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  user?.role === "reviewer" ? <ReviewerDashboard />  : <Navigate to='/login'/>} />
+            <Route path="/" element={user?.role === "admin" ? <ProtectedRoute allowedRoles={['admin']} ><AdminDashboard /></ProtectedRoute> 
+                                    : user?.role === "applicant" ? <ProtectedRoute allowedRoles={['applicant']} ><ApplicantDashboard /></ProtectedRoute> 
+                                    : user?.role === "reviewer" ? <ProtectedRoute allowedRoles={['reviewer']} ><ReviewerDashboard /></ProtectedRoute>  
+                                    : <Navigate to='/login'/>} />
             {/* <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" /> } /> */}
             
             <Route path="/login" element={<Login />} />
@@ -78,7 +76,6 @@ const App = () => {
           </Routes>
           
         <Footer/>
-        {/* </UserContext.Provider> */}
 
         <ToastContainer
           position="bottom-left"

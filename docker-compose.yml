@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  server:
+    build: ./server
+    ports:
+      - "3500:3500"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=${MONGODB_URI}  # Make sure to set this environment variable in a .env file or directly in the compose file
+    volumes:
+      - ./server:/usr/src/app
+    depends_on:
+      - client
+
+  client:
+    build: ./client
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./client:/usr/src/app
+
+volumes:
+  node_modules:

@@ -9,95 +9,129 @@ const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require("../utils/ErrorHandler");
 
 // old
-// const register = async (req, res,next) => {
-//   try {
-//     const { name, email,institution,department, phone, role,adminKey, password, cpassword } = req.body;
-//   // console.log(process.env.ADMIN_KEY);
-//   const hodExist = await User.findOne({ department , role: "hod" });
+const register = async (req, res,next) => {
+  try {
+    const { name, email,institution,department, phone, role,adminKey, password, cpassword } = req.body;
+  // console.log(process.env.ADMIN_KEY);
+  const hodExist = await User.findOne({ department , role: "hod" });
 
-//     if (role === "admin") {
+    if (role === "admin") {
 
-//       if (!name || !adminKey || !email || !phone || !role || !password || !cpassword) {
-//         return res.status(422).json({ error: "Kindly complete all fields." });
-//       }else if(adminKey !== process.env.ADMIN_KEY){
-//         return res.status(422).json({ error: "Provided Admin Key is Invalid." });
-//       }
-//     }else if(role === "hod"){
-//       if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
-//         return res.status(422).json({ error: "Kindly complete all fields." });
-//       }else if(hodExist){
-//         return res.status(422).json({ error: `Hod for ${department} already exists` });
-//       }
-//     }else{
-//       if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
-//         return res.status(422).json({ error: "Kindly complete all fields." });
-//       }
-//     }
+      if (!name || !adminKey || !email || !phone || !role || !password || !cpassword) {
+        return res.status(422).json({ error: "Kindly complete all fields." });
+      }else if(adminKey !== process.env.ADMIN_KEY){
+        return res.status(422).json({ error: "Provided Admin Key is Invalid." });
+      }
+    }else if(role === "hod"){
+      if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
+        return res.status(422).json({ error: "Kindly complete all fields." });
+      }else if(hodExist){
+        return res.status(422).json({ error: `Hod for ${department} already exists` });
+      }
+    }else{
+      if (!name || !institution || !department || !email || !phone || !role || !password || !cpassword) {
+        return res.status(422).json({ error: "Kindly complete all fields." });
+      }
+    }
 
    
     
-//     // Regular expression to validate full name with at least two words separated by a space
-//     const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+    // Regular expression to validate full name with at least two words separated by a space
+    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
   
-//     if (!nameRegex.test(name)) {
-//       return res.status(422).json({ error: "Kindly provide your complete name." });
-//     }
-//     // Regular expression to validate email format
-//     const emailRegex = /^\S+@\S+\.\S+$/;
+    if (!nameRegex.test(name)) {
+      return res.status(422).json({ error: "Kindly provide your complete name." });
+    }
+    // Regular expression to validate email format
+    const emailRegex = /^\S+@\S+\.\S+$/;
   
-//     if (!emailRegex.test(email)) {
-//       return res.status(422).json({ error: "Kindly provide a valid email address." });
-//     }
+    if (!emailRegex.test(email)) {
+      return res.status(422).json({ error: "Kindly provide a valid email address." });
+    }
     
-//     const acropolisEmailRegex = /@acropolis\.in$/;
-//     const acropolisEduEmailRegex = /@acropolis\.edu\.in$/;
+    const acropolisEmailRegex = /@acropolis\.in$/;
+    const acropolisEduEmailRegex = /@acropolis\.edu\.in$/;
 
-//     // if (!acropolisEmailRegex.test(email) && !acropolisEduEmailRegex.test(email) ) {
-//     //   return res.status(422).json({ error: "Kindly provide a email address associated with Acropolis Institute" });
-//     // }
-//     // Phone validation
-//     if (phone.length !== 10) {
-//       return res.status(422).json({ error: "Kindly enter a valid 10-digit phone number." });
-//     }
+    // if (!acropolisEmailRegex.test(email) && !acropolisEduEmailRegex.test(email) ) {
+    //   return res.status(422).json({ error: "Kindly provide a email address associated with Acropolis Institute" });
+    // }
+    // Phone validation
+    if (phone.length !== 10) {
+      return res.status(422).json({ error: "Kindly enter a valid 10-digit phone number." });
+    }
   
-//     // Password length validation
-//     if (password.length < 7) {
-//       return res.status(422).json({ error: "Password must contain at least 7 characters" });
-//     }
+    // Password length validation
+    if (password.length < 7) {
+      return res.status(422).json({ error: "Password must contain at least 7 characters" });
+    }
   
-//     if (password !== cpassword) {
-//       return res.status(422).json({ error: "Password and confirm password do not match" });
-//     }
+    if (password !== cpassword) {
+      return res.status(422).json({ error: "Password and confirm password do not match" });
+    }
   
    
       
-//       const userExist = await User.findOne({ email });
-//       if (userExist) {
-//         return res.status(422).json({ error: "Provide email is associated with another account." });
-//       }
-//        else {
-//         let user
-//         if (role === "admin") {
-//            user = new User({ name, email, phone, role,adminKey,institution:"null",department:"null", password, cpassword });
+      const userExist = await User.findOne({ email });
+      if (userExist) {
+        return res.status(422).json({ error: "Provide email is associated with another account." });
+      }
+       else {
+        let user
+        if (role === "admin") {
+           user = new User({ name, email, phone, role,adminKey,institution:"null",department:"null", password, cpassword });
 
-//         }else{
+        }else{
         
-//            user = new User({ name, email, phone, role,institution,department,adminKey:"null" ,password, cpassword });
-//         }
-//         // console.log(user);
-//         // Perform additional validation or data processing here
-//         await user.save();
+           user = new User({ name, email, phone, role,institution,department,adminKey:"null" ,password, cpassword });
+        }
+        // console.log(user);
+        // Perform additional validation or data processing here
+        await user.save();
   
-//         return res.status(201).json({ message: "Saved successfully" });
-//       }
-//     } catch (error) {
-//         next(error);
-//     }
-//   }
+        return res.status(201).json({ message: "Saved successfully" });
+      }
+    } catch (error) {
+        next(error);
+    }
+  }
 
 // new
 const registerUser = catchAsyncError(async (req, res, next) => {
     const {name, email, password, phone } = req.body
+
+    if (!name) {
+      return next(new ErrorHandler('Name field is empty', 400))
+    }
+    if (!email) {
+      return next(new ErrorHandler('email field is empty', 400))
+    }
+    if (!password) {
+      return next(new ErrorHandler('password field is empty', 400))
+    }
+    if (!phone) {
+      return next(new ErrorHandler('phone field is empty', 400))
+    }
+
+    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+  
+    if (!nameRegex.test(name)) {
+      return next(new ErrorHandler('Kindly provide your complete name.', 400))
+    }
+    // Regular expression to validate email format
+    const emailRegex = /^\S+@\S+\.\S+$/;
+  
+    if (!emailRegex.test(email)) {
+      return next(new ErrorHandler('Kindly provide a valid email address.', 400))
+    }
+
+    if (phone.length !== 10) {
+      return next(new ErrorHandler('Kindly enter a valid 10-digit phone number.', 400))
+    }
+
+    // Password length validation
+    if (password.length < 7) {
+      return next(new ErrorHandler('Password must contain at least 7 characters', 400))
+    }
 
     const user = await User.create({
         name,
@@ -589,11 +623,29 @@ const verifyEmail = async (req, res,next) => {
         return next(new ErrorHandler('Please enter email & password', 400))
     }
 
+    if (!email) {
+      return next(new ErrorHandler('email field is empty', 400))
+    }
+    if (!password) {
+      return next(new ErrorHandler('password field is empty', 400))
+    }
+
+    const emailRegex = /^\S+@\S+\.\S+$/;
+  
+    if (!emailRegex.test(email)) {
+      return next(new ErrorHandler('Kindly provide a valid email address.', 400))
+    }
+
+    // Password length validation
+    if (password.length < 7) {
+      return next(new ErrorHandler('Password must contain at least 7 characters', 400))
+    }
+
     //finding the user database
     const user = await User.findOne({email}).select('+password');
 
     if(!user) {
-        return next(new ErrorHandler('Invalid email or password', 401))
+      return next(new ErrorHandler('Invalid email or password', 401))
     }
     
     if(!await user.isValidPassword(password)){
@@ -603,9 +655,6 @@ const verifyEmail = async (req, res,next) => {
     sendToken(user, 201, res)
     
 })
-
-
-
 
   const about = async (req, res) => {
     // console.log("about page");

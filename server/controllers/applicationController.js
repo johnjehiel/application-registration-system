@@ -1,6 +1,7 @@
 const Application = require('../model/applicationSchema');
 const User = require('../model/userSchema');
 const nodemailer = require("nodemailer");
+const { APPLICATION_STATUS } = require('../utils/Constants');
 
 
  // transporter for sending email
@@ -120,7 +121,6 @@ const createNewApplication = async (req, res, next) => {
       description,
       // isApproved
     } = req.body;
-    console.log(req.body);
     //  console.log(req.body);
     const title = req.file?.originalname;
     const filename =  req.file?.filename;
@@ -298,13 +298,11 @@ const getApplicationForReviewer = async (req, res, next) => {
 
 const getApplicationForAdmin = async (req, res, next) => {
   try {
-    let statusArray = ["Application Sent", "Approved By HOD", "Rejected By HOD", "Approved By Admin", "Rejected By Admin"];
+    let statusArray = [APPLICATION_STATUS.ApplicationSent, APPLICATION_STATUS.ApprovedByReviewer, APPLICATION_STATUS.RejectedByReviewer, APPLICATION_STATUS.ApprovedByAdmin, APPLICATION_STATUS.RejectedByAdmin];
     const adminEmail = req.user.email;
     const userId = req.user._id;
 
-    if (process.env.REACT_APP_HOD_FEATURE != "true") {
-      statusArray.unshift("Request Sent"); // Add "Request Sent" at the beginning if HOD feature is on
-    }
+    statusArray.unshift("Request Sent");
 
     const applications = await Application.find({
        isApproved: { $in: statusArray }

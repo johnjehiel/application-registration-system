@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
+import { APPLICATION_STATUS } from "../Constants";
 
-// import {RequestSent , ApprovedByAdmin,ApprovedByHod,RejectedByAdmin,RejectedByHod} from "../Steps"
+
+// import {ApplicationSent , ApprovedByAdmin,ApprovedByReviewerStep,RejectedByAdmin,ApprovedByReviewerStep} from "../Steps"
 
 const ApplicantApplicationList = () => {
   const navigate = useNavigate();
@@ -51,16 +53,16 @@ const ApplicantApplicationList = () => {
   };
 //   const filteredApplications = {};
   const filteredApplications = Object.values(applicationData).filter((applicationData) => {
-    if (filterValue === "Application Sent") {
-      return applicationData.isApproved === "Application Sent";
-    } else if (filterValue === "Approved By HOD") {
-      return applicationData.isApproved === "Approved By HOD";
-    }else if (filterValue === "Approved By Admin") {
-      return applicationData.isApproved === "Approved By Admin";
-    }else if (filterValue === "Rejected By Admin") {
-      return applicationData.isApproved === "Rejected By Admin";
-    }else if (filterValue === "Rejected By HOD") {
-      return applicationData.isApproved === "Rejected By HOD";
+    if (filterValue === APPLICATION_STATUS.ApplicationSent) {
+      return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
+    } else if (filterValue === APPLICATION_STATUS.ApprovedByReviewer) {
+      return applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer;
+    }else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
+      return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
+    }else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
+      return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
+    }else if (filterValue === APPLICATION_STATUS.RejectedByReviewer) {
+      return applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer;
     } else {
       return applicationData
     }
@@ -86,39 +88,38 @@ const ApplicantApplicationList = () => {
             All
           </button>
           <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "Application Sent" ? "bg-indigo-100 text-indigo-800 " : "bg-white text-gray-800 hover:bg-gray-100"}`}
-            onClick={() => handleFilter("Application Sent")}
+            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === APPLICATION_STATUS.ApplicationSent ? "bg-indigo-100 text-indigo-800 " : "bg-white text-gray-800 hover:bg-gray-100"}`}
+            onClick={() => handleFilter(APPLICATION_STATUS.ApplicationSent)}
           >
             Pending
           </button>
           
-        {process.env.REACT_APP_HOD_FEATURE === "true" &&
         <div>
           <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "Approved By HOD" ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800 hover:bg-gray-100"}`}
-            onClick={() => handleFilter("Approved By HOD")}
+            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === APPLICATION_STATUS.ApprovedByReviewer ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800 hover:bg-gray-100"}`}
+            onClick={() => handleFilter(APPLICATION_STATUS.ApprovedByReviewer)}
           >
             Forwarded To Admin
           </button>
             
 
           <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "Rejected By HOD" ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800   hover:bg-gray-100"}`}
-            onClick={() => handleFilter("Rejected By HOD")}
+            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === APPLICATION_STATUS.RejectedByReviewer ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800   hover:bg-gray-100"}`}
+            onClick={() => handleFilter(APPLICATION_STATUS.RejectedByReviewer)}
           >
             Rejected By Reviewer
           </button>
           </div>
-           }
+
           <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "Approved By Admin" ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800 hover:bg-gray-100"}`}
-            onClick={() => handleFilter("Approved By Admin")}
+            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === APPLICATION_STATUS.ApprovedByAdmin ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800 hover:bg-gray-100"}`}
+            onClick={() => handleFilter(APPLICATION_STATUS.ApprovedByAdmin)}
           >
             Approved By Admin
           </button>
           <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "Rejected By Admin" ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800   hover:bg-gray-100"}`}
-            onClick={() => handleFilter("Rejected By Admin")}
+            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === APPLICATION_STATUS.RejectedByAdmin ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800   hover:bg-gray-100"}`}
+            onClick={() => handleFilter(APPLICATION_STATUS.RejectedByAdmin)}
           >
             Rejected By Admin
           </button>
@@ -172,7 +173,7 @@ const ApplicantApplicationList = () => {
 
                             <td className="px-5 py-5 text-m bg-white  border-gray-200">
 
-                            {application.isApproved === "Approved By Admin" && (
+                            {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                                 // <ApprovedByAdmin />
                                 <p className="text-green-600 font-bold whitespace-no-wrap">
                                 {application.isApproved}
@@ -180,15 +181,15 @@ const ApplicantApplicationList = () => {
                                 // <p className="text-m text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-3xl text-green-500 font-black">
                                 // </p>
                             )}
-                            {application.isApproved === "Approved By HOD" && (
-                                // <ApprovedByHod />
+                            {application.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
+                                // <ApprovedByReviewerStep />
                                 <p className="text-blue-600 font-bold  whitespace-no-wrap">
                                 {/* {application.isApproved} */}
                                 Forwarded To Admin
                                 </p>
                             )}
 
-                            {application.isApproved === "Rejected By HOD" && (
+                            {application.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
                                 <p className="text-red-900 font-bold  whitespace-no-wrap">
                                 {/* {application.isApproved} */}
                                 Rejected By Reviewer
@@ -196,13 +197,13 @@ const ApplicantApplicationList = () => {
 
                             )}
 
-                            {application.isApproved === "Rejected By Admin" && (
+                            {application.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
                                 <p className="text-red-900 font-bold  whitespace-no-wrap">
                                 {application.isApproved}
                                 </p>
 
                             )}
-                            {application.isApproved === "Application Sent" && (
+                            {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
                                 <p className="text-orange-600 font-bold  whitespace-no-wrap">
                                 {/* {application.isApproved} */}
                                 Pending

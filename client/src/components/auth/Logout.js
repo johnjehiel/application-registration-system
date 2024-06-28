@@ -1,8 +1,8 @@
-import  { useEffect, useContext,useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { UserContext } from './../../App'
+// import { UserContext } from './../../App'
 import { toast } from "react-toastify";
-import axios from "axios";
+// import axios from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import {useDispatch, useSelector} from 'react-redux';
 import { logout } from '../../actions/userActions';
@@ -69,10 +69,11 @@ const Logout = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(logout);
-    setIsLoading(false);
-    // toast.success("Logged Out Successfully")
-    navigate("/login", { replace: true })
+      dispatch(logout);
+      setIsLoading(false);
+      toast.success("Logged Out Successfully")
+      navigate("/login", { replace: true } )
+    // navigate("/login")
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

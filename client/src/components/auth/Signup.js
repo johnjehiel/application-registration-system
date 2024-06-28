@@ -81,16 +81,55 @@ const Signup = () => {
   const { loading, error, isAuthenticated } = useSelector(state => state.authState);
 
   const submitHandler = (e) => {
-        console.log("SUbmitting");
-        e.preventDefault();
-        setIsLoading(true);
-        const formData = new FormData();
-        formData.append('name', user.name)
-        formData.append('email', user.email)
-        formData.append('password', user.password)
-        formData.append('phone', user.phone);
-        dispatch(register(formData))
-        setIsLoading(false);
+      e.preventDefault();
+
+      const { name, email, password, phone, cpassword } = user;
+      if (!name) {
+        return toast.error("Name field is empty");
+      }
+      if (!email) {
+        return toast.error("email field is empty");
+      }
+      if (!password) {
+        return toast.error("password field is empty");
+      }
+      if (!phone) {
+        return toast.error("phone field is empty");
+      }
+
+      const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+    
+      if (!nameRegex.test(name)) {
+        return toast.error("Kindly provide a valid name.");
+      }
+
+      const emailRegex = /^\S+@\S+\.\S+$/;
+    
+      if (!emailRegex.test(email)) {
+        return toast.error("Kindly provide a valid email address.");
+      }
+
+      if (phone.length !== 10) {
+        return toast.error("Kindly enter a valid 10-digit phone number.");
+      }
+
+      // Password length validation
+      if (password.length < 7) {
+        return toast.error("Password must contain at least 7 characters");
+      }
+
+      if (password !== cpassword) {
+        return toast.error("Password and confirm password arent equal");
+      }
+
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append('name', name)
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('phone', phone);
+      dispatch(register(formData))
+      setIsLoading(false);
     }
 
     useEffect(()=>{
@@ -100,7 +139,7 @@ const Signup = () => {
         }
         if(error)  {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                // position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError) }
             })
@@ -111,7 +150,7 @@ const Signup = () => {
   return (
     <>
       <MetaData title={"Sign up"} />
-      {(isLoading || loading) ? (
+      {(isLoading) ? (
         <LoadingSpinner />
       ) : (
         <section className="text-gray-600 body-font my-10  min-h-screen flex items-center justify-center bg-white">
@@ -162,7 +201,7 @@ const Signup = () => {
                   Phone
                 </label>
                 <input
-                  type="tel"
+                  type="number"
                   pattern="[0-9]{10}"
                   required
                   value={user.phone}

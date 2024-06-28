@@ -49,9 +49,9 @@ const ApplicationForm = () => {
 
 //       let status;
 //       // if(data.role === "admin"){
-//       //   status = "Approved By Admin"
+//       //   status = APPLICATION_STATUS.ApprovedByAdmin
 //       // }else if (data.role === "hod"){
-//       //   status = "Approved By HOD"
+//       //   status = APPLICATION_STATUS.ApprovedByReviewer
 //       // }
 
 // //       if (data.emailVerified) {

@@ -9,12 +9,10 @@ const styles = {
 
 
 
-export const RequestSent = () => {
+export const ApplicationSent = () => {
 
   return (
     <>
-      {process.env.REACT_APP_HOD_FEATURE === "true" ?
-        (
           <>
             <div className="w-full py-6">
               <div className="flex">
@@ -30,7 +28,7 @@ export const RequestSent = () => {
                     </div>
                   </div>
 
-                  <div className="text-s font-semibold text-center md:text-base">Request Sent</div>
+                  <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
                 </div>
 
 
@@ -53,7 +51,7 @@ export const RequestSent = () => {
                     </div>
                   </div>
 
-                  <div className="text-s font-semibold text-center md:text-base">Forwarded By HOD</div>
+                  <div className="text-s font-semibold text-center md:text-base">Forwarded By Reviewer</div>
                 </div>
 
 
@@ -81,7 +79,8 @@ export const RequestSent = () => {
               </div>
             </div>
           </>
-        ) : (
+        
+        {/* : (
           <>
             <div class="w-full py-6">
               <div class="flex">
@@ -127,15 +126,12 @@ export const RequestSent = () => {
             </div>
           </>
         )
-
-      }
+         */}
     </>
-
-
   )
 }
 
-export const ApprovedByHod = () => {
+export const ApprovedByReviewerStep = () => {
 
   return (
     <>
@@ -155,7 +151,7 @@ export const ApprovedByHod = () => {
               </div>
             </div>
 
-            <div className="text-s font-semibold text-center md:text-base">Request Sent</div>
+            <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
           </div>
 
 
@@ -177,7 +173,7 @@ export const ApprovedByHod = () => {
               </div>
             </div>
 
-            <div className="text-s font-semibold text-center md:text-base">Approved By HOD</div>
+            <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
           </div>
 
 
@@ -217,8 +213,6 @@ export const ApprovedByAdmin = () => {
 
   return (
     <>
-      { process.env.REACT_APP_HOD_FEATURE === "true" ?
-        (
           <>
             <div className="w-full py-6">
               <div className="flex">
@@ -234,7 +228,7 @@ export const ApprovedByAdmin = () => {
                     </div>
                   </div>
 
-                  <div className="text-s font-semibold text-center md:text-base">Request Sent</div>
+                  <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
                 </div>
 
 
@@ -253,7 +247,7 @@ export const ApprovedByAdmin = () => {
                     </div>
                   </div>
 
-                  <div className="text-s font-semibold text-center md:text-base">Approved By HOD</div>
+                  <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
                 </div>
 
 
@@ -285,7 +279,7 @@ export const ApprovedByAdmin = () => {
 
 
           </>
-        ) : (
+         {/* : (
           <>
 
 
@@ -336,23 +330,17 @@ export const ApprovedByAdmin = () => {
 
           </>
             
-            )
-
-      }
+            ) */}
 
     </>
-
-
         )
       }
 
 
-export const RejectedByHod = () => {
+export const RejectedByReviewerStep = () => {
 
   return (
       <>
-
-
         <div className="w-full py-6">
           <div className="flex">
             <div className="w-1/3">
@@ -367,7 +355,7 @@ export const RejectedByHod = () => {
                 </div>
               </div>
 
-              <div className="text-s font-semibold text-center md:text-base">Request Sent</div>
+              <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
             </div>
 
 
@@ -389,7 +377,7 @@ export const RejectedByHod = () => {
                 </div>
               </div>
 
-              <div className="text-s font-semibold text-center md:text-base">Rejected By HOD</div>
+              <div className="text-s font-semibold text-center md:text-base">Rejected By Reviewer</div>
             </div>
 
 
@@ -415,10 +403,6 @@ export const RejectedByHod = () => {
             </div>
           </div>
         </div>
-
-
-
-
       </>
       )
 }
@@ -428,8 +412,6 @@ export const RejectedByAdmin = () => {
 
 return (
       <>
-        {process.env.REACT_APP_HOD_FEATURE === "true" ?
-          (
             <>
               <div className="w-full py-6">
                 <div className="flex">
@@ -445,7 +427,7 @@ return (
                       </div>
                     </div>
 
-                    <div className="text-s font-semibold text-center md:text-base">Request Sent</div>
+                    <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
                   </div>
 
 
@@ -464,7 +446,7 @@ return (
                       </div>
                     </div>
 
-                    <div className="text-s font-semibold text-center md:text-base">Forwarded By HOD</div>
+                    <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
                   </div>
 
 
@@ -491,7 +473,8 @@ return (
               </div>
 
             </>
-          ) : (
+
+          {/* : (
             <>
 
 
@@ -541,9 +524,7 @@ return (
 
 
             </>
-          )
-
-        }
+          ) */}
       </>
 
 

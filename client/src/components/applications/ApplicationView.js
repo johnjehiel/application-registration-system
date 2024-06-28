@@ -5,22 +5,24 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
 import { parseISO, format } from "date-fns";
-import { UserContext } from "../../App";
-import { Document, Page } from 'react-pdf';
+// import { UserContext } from "../../App";
+// import { Document, Page } from 'react-pdf';
 
 // import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
 
 import {
-  RequestSent,
+  ApplicationSent,
   ApprovedByAdmin,
-  ApprovedByHod,
+  ApprovedByReviewerStep,
   RejectedByAdmin,
-  RejectedByHod,
+  RejectedByReviewerStep,
 } from "../Steps";
 import { useSelector } from 'react-redux';
-import PdfComp from "../pdfComp";
+// import PdfComp from "../pdfComp";
+import { APPLICATION_STATUS } from "../Constants";
+
   
 
 const ApplicationView = () => {
@@ -68,7 +70,7 @@ const ApplicationView = () => {
   };
 
   const updateApplication = async (applicationId, isApproved) => {
-    if (isApproved === "Rejected By Admin") {
+    if (isApproved === APPLICATION_STATUS.RejectedByAdmin) {
       if (rejectionReason.trim() === "") {
         toast.error("Please provide a reason for rejection.");
         return;
@@ -83,7 +85,7 @@ const ApplicationView = () => {
         {
           isApproved: isApproved,
           rejectionReason:
-            isApproved === "Approved By Admin" ? null : rejectionReason,
+            isApproved === APPLICATION_STATUS.ApprovedByAdmin ? null : rejectionReason,
         },
         {
           withCredentials: true,
@@ -286,67 +288,71 @@ const ApplicationView = () => {
                 {/* <div>
                               <p className="text-m  text-xl sm:text-3xl md:text-4xl  lg:text-3xl xl:text-3xl  text-zinc-700 font-bold ">Status</p>
                             </div> */}
-                {applicationData.isApproved === "Approved By Admin" && (
+                {applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                   <ApprovedByAdmin />
                 )}
-                {applicationData.isApproved === "Approved By HOD" && (
-                  <ApprovedByHod />
+                {applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
+                  <ApprovedByReviewerStep />
                 )}
-                {applicationData.isApproved === "Rejected By HOD" && (
-                  <RejectedByHod />
+                {applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
+                  <RejectedByReviewerStep />
                 )}
-                {applicationData.isApproved === "Rejected By Admin" && (
+                {applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
                   <RejectedByAdmin />
                 )}
-                {applicationData.isApproved === "Application Sent" && <RequestSent />}
+                {applicationData.isApproved === APPLICATION_STATUS.ApplicationSent && <ApplicationSent />}
               </div>
               <div className="px-5 py-5 text-l flex font-bold  bg-white justify-between border-gray-200">
                 
                 {user.role === "admin" && (
                   <>
                     {
-                      applicationData.isApproved !== "Approved By Admin" &&
+                      applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
-                        onClick={() =>
-                          updateApplication(applicationData._id, "Approved By Admin")
-                        }
-                        className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
+                      onClick={() =>
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin)
+                      }
+                      className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
                         Approve
                       </button>
                     }
                     {
-                      applicationData.isApproved !== "Rejected By Admin" &&
+                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                       <button
-                        onClick={() => openModal(applicationData._id)}
-                        className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
+                      onClick={() => openModal(applicationData._id)}
+                      className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
                         Reject
                       </button>
                     }
                   </>
                 )}
 
-                {user.role === "hod" && (
+                {user.role === "reviewer" && (
                   <>
                     {/* <button
                       onClick={() => handleEditClick(applicationData._id)}
                       className="   leading-none text-gray-600 py-3 px-5 bg-yellow-200 rounded hover:bg-yellow-300 focus:outline-none">
                       Edit
-                    </button> */}
+                      </button> */}
 
-                    <button
+                    { applicationData.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
+                      <button
                       onClick={() =>
-                        updateApplication(applicationData._id, "Approved By HOD")
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer)
                       }
                       className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
-                      Approve
-                    </button>
-                    <button
-                      onClick={() =>
-                        updateApplication(applicationData._id, "Rejected By HOD")
-                      }
-                      className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
-                      Reject
-                    </button>
+                        Approve
+                      </button>
+                    }
+                    { applicationData.isApproved !== APPLICATION_STATUS.RejectedByReviewer &&
+                      <button
+                        onClick={() =>
+                          updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer)
+                        }
+                        className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
+                        Reject
+                      </button>
+                    }
 
                     {/* <button
                   onClick={() => deleteBooking(applicationData._id)}
@@ -381,7 +387,7 @@ const ApplicationView = () => {
                 className="px-4 py-2 bg-red-500 text-white rounded mr-2"
                 // onClick={handleReject}
                 onClick={() =>
-                  updateApplication(applicationData._id, "Rejected By Admin")
+                  updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin)
                 }>
                 Reject
               </button>

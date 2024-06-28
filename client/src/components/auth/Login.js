@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { UserContext } from "./../../App";
+// import { UserContext } from "./../../App";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
@@ -73,37 +73,51 @@ const Login = () => {
   const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
   // new
   const loginUser = (e) => {
-    try {
-      e.preventDefault();
-      setIsLoading(true);
-      dispatch(login(email, password));
-    } catch (error) {}
-    finally {
-      setIsLoading(false);
-      if (user)
-        toast.success("Logged In Successfully")
-    }
+    e.preventDefault();
+
+      if (!email) {
+        return toast.error("email field is empty");
+      }
+      if (!password) {
+        return toast.error("password field is empty");
+      }
+
+      const emailRegex = /^\S+@\S+\.\S+$/;
+    
+      if (!emailRegex.test(email)) {
+        return toast.error("Kindly provide a valid email address.");
+      }
+
+      if (password.toString().length < 7) {
+        return toast.error("Password must contain at least 7 characters");
+      }
+      try {
+        setIsLoading(true);
+        dispatch(login(email, password));
+      } catch (error) {}
+      finally {
+        setIsLoading(false);
+      }
+      if (user) toast.success("Logged In Successfully")
   }
 
   useEffect(() => {
         if(isAuthenticated) {
             navigate('/')
         }
-
         if(error)  {
             toast(error, {
-                position: toast.POSITION.BOTTOM_CENTER,
+                // position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError) }
             })
             return
         }
     },[error, isAuthenticated, dispatch, navigate])
-
   return (
     <>
     <MetaData title={`Sign In`} />
-    {(isLoading || loading) ? (
+    {(isLoading || isAuthenticated) ? (
       <LoadingSpinner />
     ) :
       <section className="text-gray-600 body-font min-h-screen flex items-center justify-center bg-white">

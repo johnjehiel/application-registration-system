@@ -1,26 +1,17 @@
 import React, { useContext   } from "react";
 import { Link } from "react-router-dom";
-import { UserContext } from "../App";
 import logo from '../assets/logo.png'
 import { useSelector } from "react-redux";
 
 
 const Navbar = () => {
-  // const { state } = useContext(UserContext)
   const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
 
-  // const [showMenu, setShowMenu] = useState(false);
 
   const toggleMenu = () => {
-    //consolelog("toggle called");
     document.getElementById('menu').classList.toggle('hidden');
-    
-    // setShowMenu(!showMenu);
-  };
-  //consolelog(state);
-
-// const dashboard = role.charAt(0).toUpperCase() + role.slice(1);
-// //consolelog(dashboard); 
+  
+  }; 
 
 // "Admin"
 
@@ -68,8 +59,6 @@ const RenderUser = () => {
           </Link>
           {/* <button className="focus:outline-none lg:text-lg lg:font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 hidden md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  sm:px-8 py-1 sm:py-3 text-sm">Sign In</button> */}
 
-          {/* <Link to="/login" className="mr-5 hover:text-gray-900">Login</Link>
-            <Link to="/signup" className="mr-5 hover:text-gray-900">Sign Up</Link> */}
         </>
       )
     }

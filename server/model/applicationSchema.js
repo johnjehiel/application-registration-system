@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { APPLICATION_STATUS } = require('../utils/Constants');
 
 const applicationSchema = new mongoose.Schema(
   { userId: {
@@ -33,7 +34,7 @@ const applicationSchema = new mongoose.Schema(
       type: String,
     },
     isApproved: {
-      default: "Application Sent",
+      default: APPLICATION_STATUS.ApplicationSent,
       type: String,
       required: true
     },

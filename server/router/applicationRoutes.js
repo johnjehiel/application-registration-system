@@ -20,7 +20,6 @@ const storage = multer.diskStorage({
 
 router.get('/applications', isAuthenticatedUser, applicationController.getApplications);
 router.post('/application-form', isAuthenticatedUser, upload.single("file"), applicationController.createNewApplication);
-// router.get('/applicant-applications',authenticate,  applicationController.getApplicationByUserId);
 router.get('/applicant-applications',isAuthenticatedUser,  applicationController.getApplicationByUserId);
 router.get('/application-view/:applicationId',isAuthenticatedUser, applicationController.getApplicationById);
 router.put('/application-edit/:applicationId',isAuthenticatedUser, applicationController.updateApplication);

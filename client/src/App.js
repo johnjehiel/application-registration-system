@@ -22,13 +22,10 @@ import ApplicationView from "./components/applications/ApplicationView";
 import ReviewerDashboard from "./components/dashboard/ReviewerDashboard";
 import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
 import './pdfWorker';
-// import Home from "./components/Home";
-// import About from "./components/About";
 import Signup from "./components/auth/Signup";
 import { loadUser } from "./actions/userActions";
 import store from "./store";
 import { useSelector } from "react-redux";
-// import Home from "./components/Home";
 import ProtectedRoute from "./route/ProtectedRoute";
 // import { CalendarView } from "./components/CalendarView";
 
@@ -47,27 +44,25 @@ const App = () => {
       <HelmetProvider>
           <Navbar />
           <Routes>
-            {/* <Route path="/" element={user.role === "admin" ? <AdminDashboard /> : state.role === "applicant" ? <ApplicantDashboard /> : process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod" ? <ReviewerDashboard />  : <Navigate to='/login'/>} /> */}
             <Route path="/" element={user?.role === "admin" ? <ProtectedRoute allowedRoles={['admin']} ><AdminDashboard /></ProtectedRoute> 
                                     : user?.role === "applicant" ? <ProtectedRoute allowedRoles={['applicant']} ><ApplicantDashboard /></ProtectedRoute> 
                                     : user?.role === "reviewer" ? <ProtectedRoute allowedRoles={['reviewer']} ><ReviewerDashboard /></ProtectedRoute>  
                                     : <Navigate to='/login'/>} />
-            {/* <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" /> } /> */}
             
+            <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/application-form" element={<ProtectedRoute allowedRoles={['applicant']}><ApplicationForm/></ProtectedRoute>}/>
             <Route exact path="/application-view/:applicationId" element={<ProtectedRoute allowedRoles={['applicant', "reviewer", "admin"]}><ApplicationView/></ProtectedRoute>} />
             
+            <Route path="/*" element={<ErrorPage />} />
+
             {/* YET TO COMPLETE /application-edit */}
             {/* <Route exact path="/application-edit/:applicationId" element={(state.role === "admin" || (process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
 
-            <Route path="/*" element={<ErrorPage />} />
             
             {/* <Route path="/" element={<Home />} /> */}
-            {/* <Route path="/profile" element={<About />} /> */}
             {/* <Route path="/calendar" element={<CalendarView />} /> */}
-            <Route path="/signup" element={<Signup />} />
             {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}
             {/* <Route path="/forgotPassword/:id/:token" element={<ForgotPassword />} /> */}
             {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}

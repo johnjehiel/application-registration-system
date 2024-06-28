@@ -3,31 +3,6 @@ const User = require("../model/userSchema");
 const catchAsyncError = require("./catchAsyncError");
 const jwt = require("jsonwebtoken");
 
-//old
-exports.authenticate = async (req, res, next) => {
-  try {
-    const bearerHeader = req.headers["authorization"];
-    const bearer = bearerHeader.split(" ");
-    const token = bearer[1];
-    const verifyTokens = jwt.verify(token, process.env.SECRET_KEY);
-    const user = await User.findOne({
-      _id: verifyTokens._id,
-      "tokens.token": token,
-    });
-    if (!user) {
-      throw new Error("user not found");}
-      
-      req.token = token;
-
-      req.user = user;
-      req.userID = user._id;
-      next();
-    
-  } catch (error) {
-    console.log(error);
-    res.status(401).send("unauthorized:No token provided");
-  }
-};
 // new
 exports.isAuthenticatedUser = catchAsyncError( async (req, res, next) => {
   const { token  }  = req.cookies;

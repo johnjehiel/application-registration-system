@@ -336,6 +336,8 @@ const ApplicationView = () => {
                       </button> */}
 
                     { applicationData.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
+                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                      applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                       onClick={() =>
                         updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer)
@@ -345,6 +347,8 @@ const ApplicationView = () => {
                       </button>
                     }
                     { applicationData.isApproved !== APPLICATION_STATUS.RejectedByReviewer &&
+                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                      applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                         onClick={() =>
                           updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer)

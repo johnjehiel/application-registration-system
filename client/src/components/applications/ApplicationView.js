@@ -5,12 +5,6 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
 import { parseISO, format } from "date-fns";
-// import { UserContext } from "../../App";
-// import { Document, Page } from 'react-pdf';
-
-// import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
 
 import {
   ApplicationSent,
@@ -20,7 +14,6 @@ import {
   RejectedByReviewerStep,
 } from "../Steps";
 import { useSelector } from 'react-redux';
-// import PdfComp from "../pdfComp";
 import { APPLICATION_STATUS, ROLES } from "../Constants";
 
   
@@ -239,7 +232,6 @@ const ApplicationView = () => {
                   </p>
                 </div>
               </div>
-              {/* pdf viewing format 1 */}
               {applicationData.pdfFile && applicationData.pdfFile.filename && (
                 <div className="flex flex-wrap -mx-3 mb-6">
                   <div className="w-full px-3">
@@ -247,26 +239,11 @@ const ApplicationView = () => {
                       Attached File
                     </h1>
                     <div className="appearance-none block w-full h-screen text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                      {/* // pdf viewing format 1.1
-                        <Document
-                        file={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}
-                        onLoadSuccess={({ numPages }) => console.log(`Loaded PDF with ${numPages} pages.`)}
-                        >
-                        <Page pageNumber={1} />
-                      </Document> */}
                       <iframe className="w-full h-full" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`} ></iframe>
                     </div>
                   </div>
                 </div>
               )}
-
-              {/* //pdf viewing format 2 
-              {
-                applicationData.pdfFile  && applicationData.pdfFile.filename && (
-                  <PdfComp fileURL={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`}/>
-                )
-              }
-              */}
 
               {applicationData.rejectionReason && (
                 <div className="flex flex-wrap -mx-3 mb-6">

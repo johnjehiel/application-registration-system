@@ -21,7 +21,6 @@ import ApplicationView from "./components/applications/ApplicationView";
 // import EditApplication from "./components/applications/EditApplication";
 import ReviewerDashboard from "./components/dashboard/ReviewerDashboard";
 import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
-import './pdfWorker';
 import Signup from "./components/auth/Signup";
 import { loadUser } from "./actions/userActions";
 import store from "./store";

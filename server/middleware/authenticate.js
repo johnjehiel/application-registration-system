@@ -24,7 +24,3 @@ exports.authorizeRoles = (...roles) => {
        next()
    }
 }
-
-
-
-// module.exports = Authenticate;

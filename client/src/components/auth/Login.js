@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 // import { UserContext } from "./../../App";
@@ -17,80 +17,38 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [authStatus, setAuthStatus] = useState("");
-  /*
-  const loginUser = async (e) => {
-    e.preventDefault();
-    setIsLoading(true)
-    try {
 
-      const response = await axios.post(`${process.env.REACT_APP_SERVER_URL}/login`, {
-        
-        email,
-        password,
-      }, {
-        withCredentials: true, 
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-      });
-      
-      const data = response.data;
-
-      localStorage.setItem("jwtoken", data.token)
-
-      dispatch({ type: "USER", payload: true })
-
-      if (data.userLogin.role === 'admin') {
-        dispatch({ type: 'USER_TYPE', payload: "admin" });
-      } else if (data.userLogin.role === 'hod') {
-        dispatch({ type: 'USER_TYPE', payload: "hod" });
-      } else {
-        dispatch({ type: 'USER_TYPE', payload: "applicant" });
-      }
-
-      localStorage.setItem("userId", data.userLogin._id)
-      toast.success("Login Successfull")
-      setIsLoading(false);
-
-      navigate("/");
-      // }
-    } catch (error) {
-      if (error.response.status === 400 && error.response) {
-        const data = error.response.data;
-        setIsLoading(false);
-        setAuthStatus(data.error)
-      } else {
-        setAuthStatus("Something Went Worng")
-        console.log(error)
-      }
-    }
-  };
-  */
   const dispatch = useDispatch();
   const location = useLocation();
   
   const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
+  
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+
   // new
   const loginUser = (e) => {
     e.preventDefault();
 
       if (!email) {
+        emailRef.current.focus();
         return toast.error("email field is empty");
       }
-      if (!password) {
-        return toast.error("password field is empty");
-      }
-
       const emailRegex = /^\S+@\S+\.\S+$/;
-    
       if (!emailRegex.test(email)) {
+        emailRef.current.focus();
         return toast.error("Kindly provide a valid email address.");
       }
 
+      if (!password) {
+        passwordRef.current.focus();
+        return toast.error("password field is empty");
+      }
       if (password.toString().length < 7) {
+        passwordRef.current.focus();
         return toast.error("Password must contain at least 7 characters");
       }
+
       try {
         setIsLoading(true);
         dispatch(login(email, password));
@@ -149,6 +107,7 @@ const Login = () => {
                 id="email"
                 name="email"
                 placeholder="Email"
+                ref={emailRef}
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
@@ -168,15 +127,16 @@ const Login = () => {
                 id="password"
                 name="password"
                 placeholder="Password"
+                ref={passwordRef}
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
 
-            <div className="my-4">
+            {/* <div className="my-4">
               <p className="text-s text-red-600	 font-bold">
                 {authStatus}
               </p>
-            </div>
+            </div> */}
 
 
             {/* <div className="my-4">

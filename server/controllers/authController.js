@@ -113,8 +113,9 @@ const registerUser = catchAsyncError(async (req, res, next) => {
       return next(new ErrorHandler('phone field is empty', 400))
     }
 
-    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
-  
+    // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+    const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
+
     if (!nameRegex.test(name)) {
       return next(new ErrorHandler('Kindly provide your complete name.', 400))
     }
@@ -132,6 +133,21 @@ const registerUser = catchAsyncError(async (req, res, next) => {
     // Password length validation
     if (password.length < 7) {
       return next(new ErrorHandler('Password must contain at least 7 characters', 400))
+    }
+    
+    const userWithName = await User.findOne({ name });
+    if (userWithName) {
+        return next(new ErrorHandler('name already exists', 400));
+    }
+
+    const userWithEmail = await User.findOne({ email });
+    if (userWithEmail) {
+        return next(new ErrorHandler('email already exists', 400));
+    }
+
+    const userWithPhone = await User.findOne({ phone });
+    if (userWithPhone) {
+        return next(new ErrorHandler('phone number already exists', 400));
     }
 
     const user = await User.create({

@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../LoadingSpinner";
@@ -12,7 +12,7 @@ const Signup = () => {
   const navigate = useNavigate();
   const [authStatus, setAuthStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const [user, setUser] = useState({
     name: "",
     email: "",
@@ -21,62 +21,19 @@ const Signup = () => {
     cpassword: "",
   });
 
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const phoneRef = useRef(null);
+  const passwordRef = useRef(null);
+  const cpasswordRef = useRef(null);
+
   let name, value;
   const handleInputs = (e) => {
     name = e.target.name;
     value = e.target.value;
     setUser({ ...user, [name]: value });
   };
-  /*
-  const PostData = async (e) => {
-    e.preventDefault();
-    setIsLoading(true);
-    const {
-      name,
-      email,
-      phone,
-      role,
-      institution,
-      department,
-      adminKey,
-      password,
-      cpassword,
-    } = user;
 
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_SERVER_URL}/register`,
-        {
-          name,
-          email,
-          phone,
-          role,
-          institution,
-          department,
-          adminKey,
-          password,
-          cpassword,
-        },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      setIsLoading(false);
-      toast.success("Sign Up Successfull!");
-
-      navigate("/login");
-    } catch (error) {
-      if (error.response.status === 422 && error.response) {
-        setIsLoading(false);
-        const data = error.response.data;
-        setAuthStatus(data.error);
-      }
-    }
-  };
-*/
   const dispatch = useDispatch();
   const { loading, error, isAuthenticated } = useSelector(state => state.authState);
 
@@ -85,40 +42,48 @@ const Signup = () => {
 
       const { name, email, password, phone, cpassword } = user;
       if (!name) {
+        nameRef.current.focus();
         return toast.error("Name field is empty");
       }
-      if (!email) {
-        return toast.error("email field is empty");
-      }
-      if (!password) {
-        return toast.error("password field is empty");
-      }
-      if (!phone) {
-        return toast.error("phone field is empty");
-      }
+      // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+      const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
 
-      const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
-    
       if (!nameRegex.test(name)) {
+        nameRef.current.focus();
         return toast.error("Kindly provide a valid name.");
       }
 
+      if (!email) {
+        emailRef.current.focus();
+        return toast.error("email field is empty");
+      }
       const emailRegex = /^\S+@\S+\.\S+$/;
     
       if (!emailRegex.test(email)) {
+        emailRef.current.focus();
         return toast.error("Kindly provide a valid email address.");
       }
 
+      if (!phone) {
+        phoneRef.current.focus();
+        return toast.error("phone field is empty");
+      }
       if (phone.length !== 10) {
+        phoneRef.current.focus();
         return toast.error("Kindly enter a valid 10-digit phone number.");
       }
 
-      // Password length validation
+      if (!password) {
+        passwordRef.current.focus();
+        return toast.error("password field is empty");
+      }
       if (password.length < 7) {
+        passwordRef.current.focus();
         return toast.error("Password must contain at least 7 characters");
       }
 
       if (password !== cpassword) {
+        cpasswordRef.current.focus();
         return toast.error("Password and confirm password arent equal");
       }
 
@@ -139,10 +104,17 @@ const Signup = () => {
         }
         if(error)  {
             toast(error, {
-                // position: toast.POSITION.BOTTOM_CENTER,
+                // position: toast.POSITION.TOP_CENTER,
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError) }
             })
+            if (error === "name already exists") {
+              nameRef.current.focus();
+            } else if (error === "email already exists") {
+              emailRef.current.focus();
+            } else if (error === "phone number already exists") {
+              phoneRef.current.focus();
+            }
             return
         }
     },[error, isAuthenticated, dispatch, navigate])
@@ -173,6 +145,7 @@ const Signup = () => {
                   id="name"
                   name="name"
                   placeholder="Full Name"
+                  ref={nameRef}
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -190,6 +163,7 @@ const Signup = () => {
                   id="email"
                   name="email"
                   placeholder="Email"
+                  ref={emailRef}
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -209,6 +183,7 @@ const Signup = () => {
                   id="phone"
                   name="phone"
                   placeholder="Phone"
+                  ref={phoneRef}
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -227,6 +202,7 @@ const Signup = () => {
                   id="password"
                   name="password"
                   placeholder="Password"
+                  ref={passwordRef}
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>
@@ -245,6 +221,7 @@ const Signup = () => {
                   id="cpassword"
                   name="cpassword"
                   placeholder="Confirm Password"
+                  ref={cpasswordRef}
                   className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
                 />
               </div>

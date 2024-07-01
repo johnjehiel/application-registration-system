@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
@@ -28,9 +28,15 @@ const ApplicationForm = () => {
     phoneNumber: user ? user.phone : "",
     altNumber: "",
     description: "",
-    // isApproved: "",
   });
   let characterLimit = 300;
+
+  const applicantNameRef =useRef(null);
+  const applicationNameRef =useRef(null);
+  const phoneRef =useRef(null);
+  const altPhoneRef =useRef(null);
+  const desciptionRef =useRef(null);
+  const fileRef =useRef(null);
 
 //   const userContact = async () => {
 //     try {
@@ -121,8 +127,6 @@ const ApplicationForm = () => {
 
   const submitForm = async (e) => {
     e.preventDefault();
-    // console.log(file);
-    setIsLoading(true);
     const {
       applicantName,
       applicationName,
@@ -132,45 +136,56 @@ const ApplicationForm = () => {
       phoneNumber,
       altNumber,
       description,
-      // isApproved,
     } = applicationData;
-    console.log(applicationData)
-    if (!applicantName || !phoneNumber || !applicationName) {
-        setIsLoading(false);
-        return toast.error("Please fill all details");
-    }
-    // Regular expression to validate full name with at least two words separated by a space
 
-    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+
+    if (!applicantName) {
+      applicantNameRef.current.focus();  
+      return toast.error("applicant name is empty!");
+    }
+    // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+    const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
 
     if (!nameRegex.test(applicantName)) {
-        setIsLoading(false);
-        return toast.error("Please enter your full Event Coordinator name");
-    }     
-
-    // Phone validation
+        applicantNameRef.current.focus();
+        return toast.error("Applicant name is invalid");
+    }
+    
+    if (!applicationName) {
+      applicationNameRef.current.focus();
+      return toast.error("Application name is empty!");
+    }
+    
+    if (!phoneNumber) {
+      phoneRef.current.focus();
+      return toast.error("Phone number is empty!");
+    }
     if (phoneNumber.length !== 10) {
-        console.log("phone" + phoneNumber.length)
-        setIsLoading(false);
-        return toast.error("Please enter a valid 10-digit phone number");
+        phoneRef.current.focus();
+        return toast.error("Enter a valid 10-digit phone number");
     }
-
+    
     if (altNumber && altNumber.length !== 10) {
-        setIsLoading(false);
-        return toast.error("Please enter a valid 10-digit alternate number");
+        altPhoneRef.current.focus();
+        return toast.error("Enter a valid 10-digit alternate number");
+     }
+    
+    if (!description) {
+        desciptionRef.current.focus();
+        return toast.error("Description is empty");
     }
-
     if (description.length > characterLimit) {
-        setIsLoading(false);
+        desciptionRef.current.focus();
         return toast.error("Description character limit exceeded");
-    }
-
+      }
+      
     if (!file) {
-      setIsLoading(false);
+      fileRef.current.focus();
       return toast.error("No pdf file uploaded");
     }
-
+      
     try {
+      setIsLoading(true);
       const response = await axios.post(
         `${process.env.REACT_APP_SERVER_URL}/application-form`,
         {
@@ -192,7 +207,7 @@ const ApplicationForm = () => {
           }
         }
       );
-
+      
       const data = response.data;
       if (data.message === "Application created successfully") {
         // console.log(response.data);
@@ -250,13 +265,14 @@ const ApplicationForm = () => {
                   </label>
                   <input
                     // className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="grid-event-manager"
                     type="text"
                     value={applicationData.applicantName}
                     name="applicantName"
                     onChange={handleInputs}
                     placeholder="Applicant Name"
+                    ref={applicantNameRef}
                   />
                   {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
@@ -268,13 +284,14 @@ const ApplicationForm = () => {
                     Application Name
                   </label>
                   <input
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="grid-alt-number"
                     type="text"
                     value={applicationData.applicationName}
                     name="applicationName"
                     onChange={handleInputs}
                     placeholder="Application Name"
+                    ref={applicationNameRef}
                   />
                 </div>
               </div>
@@ -287,13 +304,14 @@ const ApplicationForm = () => {
                     Phone Number
                   </label>
                   <input
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="grid-phone-number"
                     type="number"
                     value={applicationData.phoneNumber}
                     name="phoneNumber"
                     onChange={handleInputs}
                     placeholder="Phone Number"
+                    ref={phoneRef}
                   />
                   {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
@@ -302,16 +320,17 @@ const ApplicationForm = () => {
                   <label
                     className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2 "
                     htmlFor="grid-alt-number">
-                    Alternate Number
+                    Alternate Number (optional)
                   </label>
                   <input
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="grid-alt-number"
                     type="number"
                     value={applicationData.altNumber}
                     name="altNumber"
                     onChange={handleInputs}
                     placeholder="Alternate Number"
+                    ref={altPhoneRef}
                   />
                 </div>
               </div>
@@ -324,13 +343,14 @@ const ApplicationForm = () => {
                     Description
                 </label>
                 <textarea
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-nones focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-nones focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="description"
                     name="description"
                     value={applicationData.description}
                     onChange={handleInputs}
                     placeholder="Enter a description"
                     rows="5"
+                    ref={desciptionRef}
                 />
                 <p className="text-gray-600 text-xs italic">
                     {applicationData.description ? applicationData.description.length : 0} / 300 words
@@ -352,11 +372,12 @@ const ApplicationForm = () => {
                     Upload PDF
                   </label>
                   <input
-                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-gray-500"
+                    className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="file-upload"
                     type="file"
                     accept=".pdf"
                     onChange={handleFileChange}
+                    ref={fileRef}
                   />
                 </div>
               </div>

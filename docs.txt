@@ -31,12 +31,13 @@ how to create reviewer accounts
 how is admin built-in in java?
 using email or phone to login => email or phone to login 
 
-
 modifications:
     - add filter for applications
     - rejected by reviewer and accepted by admin
     - time to freeze the application
+
+completed modifications:
     - username -> only characters
     - complete validation for each box
     - phone number should also be unique
-    - error status under each textbox
+    - error status under each textbox (used onfocus instead)

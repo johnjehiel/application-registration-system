@@ -133,26 +133,31 @@ const createNewApplication = async (req, res, next) => {
       return res.status(422).json({ error: 'user not found' });
     }
 
-    if (!applicantName || !phoneNumber || !applicationName ) {
+    if (!applicantName || !phoneNumber || !applicationName || !description ) {
       return res.status(422).json({ error: "Please fill all details" });
 
     }
     // Regular expression to validate full name with at least two words separated by a space
 
-    const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
-
+    // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
+    const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
+    
     if (!nameRegex.test(applicantName)) {
-      return res.status(422).json({ error: "Please enter your full Event Coordinator name" });
+      return res.status(422).json({ error: "Invalid Applicant Name" });
     }     
 
     // Phone validation
     if (phoneNumber.length !== 10) {
-      return res.status(422).json({ error: "Please enter a valid 10-digit phone number" });
+      return res.status(422).json({ error: "Enter a valid 10-digit phone number" });
     }
 
     if (altNumber && altNumber.length !== 10) {
-      return res.status(422).json({ error: "Please enter a valid 10-digit alternate number" });
+      return res.status(422).json({ error: "Enter a valid 10-digit alternate number" });
     }   
+
+    if (!description) {
+      return res.status(422).json({ error: "Description is empty" });
+    }
 
     if (description.length > characterLimit) {
       return res.status(422).json({ error: "Description character limit exceeded" });

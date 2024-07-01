@@ -16,6 +16,8 @@ const AdminApplicationList = () => {
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
+  const [applicantNameSearchQuery, setApplicantNameSearchQuery] = useState("");
+  const [applicationNameSearchQuery, setApplicationNameSearchQuery] = useState("");
 
 
   const openModal = (applicationId) => {
@@ -27,36 +29,6 @@ const AdminApplicationList = () => {
     setRejectionReason('');
     setSelectedApplicationId('');
   };
-
-  // const userContact = async () => {
-  //   try {
-  //     const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/getdata`, {
-  //       withCredentials: true, // include credentials in the request
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //     });
-
-  //     const data = response.data;
-  //     //consolelog(data);
-  //     setUserData(data)
-  //     if (data.emailVerified) {
-  //       setEmailVerified(true)
-  //     }
-  //     setIsLoading(false);
-
-  //     if (response.status !== 200) {
-  //       throw new Error(response.error);
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   userContact();
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const getApplicationData = async () => {
     try {
@@ -153,19 +125,28 @@ const AdminApplicationList = () => {
   //   setFilterValues(values);
   // };
 
+  const handleApplicantNameSearch = (event) => {
+    setApplicantNameSearchQuery(event.target.value);
+  };
+  const handleApplicationNameSearch = (event) => {
+    setApplicationNameSearchQuery(event.target.value);
+  };
+
   const filteredApplications = Object.values(applicationData).filter((applicationData) => {
-    // return filterValues.includes(applicationData.isApproved);
-    
-    if (filterValue === APPLICATION_STATUS.ApplicationSent) {
-      return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
-    }else if(filterValue === "Approved By HOD and Rejected By HOD") {
-      return (applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer || applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer);    
-    } else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
-      return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
-    } else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
-      return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
-    } else {
-      return applicationData
+    const matchApplicantName = applicationData.applicantName.toLowerCase().includes(applicantNameSearchQuery.toLowerCase());
+    const matchApplicationName = applicationData.applicationName.toLowerCase().includes(applicationNameSearchQuery.toLowerCase());
+    if (matchApplicantName && matchApplicationName) {
+      if (filterValue === APPLICATION_STATUS.ApplicationSent) {
+        return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
+      }else if(filterValue === "Approved By HOD and Rejected By HOD") {
+        return (applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer || applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer);    
+      } else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
+        return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
+      } else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
+        return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
+      } else {
+        return applicationData
+      }
     }
   });
 
@@ -250,6 +231,34 @@ const AdminApplicationList = () => {
           </div>
         </div>
       )}
+
+        {/* <div className="container w-full px-4 mx-auto sm:px-8 "> */}
+        <div className="my-2 flex max-sm:flex-col justify-center">
+          <div className="relative w-1/4 max-sm:w-2/3 max-sm:ml-4">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i className="fi fi-rr-circle-user mt-1"></i>
+            </span>
+            <input
+              type="text"
+              value={applicantNameSearchQuery}
+              onChange={handleApplicantNameSearch}
+              placeholder="Search applicant name"
+              className="pl-10 pr-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+            />
+          </div>
+          <div className="relative sm:ml-10 w-1/4 max-sm:w-2/3 max-sm:ml-4">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i className="fi fi-rr-form mt-1"></i>
+            </span>
+            <input
+              type="text"
+              value={applicationNameSearchQuery}
+              onChange={handleApplicationNameSearch}
+              placeholder="Search application name"
+              className="pl-10 pr-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+            />
+          </div>
+        </div>
 
         {isLoading ? (
           <LoadingSpinner />

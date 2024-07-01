@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
 import { clearAuthError, login } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
+// import CaptchaComponent from "../CaptchaComponent";
 
 const Login = () => {
 
@@ -146,7 +147,7 @@ const Login = () => {
                   </Link>
             </div> */}
 
-
+            {/* <CaptchaComponent /> */}
 
             <div className="mx-auto w-fit">
               <div className="mx-auto">

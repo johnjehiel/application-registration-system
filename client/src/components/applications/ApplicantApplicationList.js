@@ -12,7 +12,8 @@ const ApplicantApplicationList = () => {
   const [applicationData, setApplicationData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [filterValue, setFilterValue] = useState("all");
-
+  const [searchQuery, setSearchQuery] = useState("");
+  
   const getApplicationData = async (userId) => {
     try {
       const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/applicant-applications`, {
@@ -51,21 +52,29 @@ const ApplicantApplicationList = () => {
   const handleFilter = (value) => {
     setFilterValue(value);
   };
-//   const filteredApplications = {};
+
+  const handleSearch = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
   const filteredApplications = Object.values(applicationData).filter((applicationData) => {
-    if (filterValue === APPLICATION_STATUS.ApplicationSent) {
-      return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
-    } else if (filterValue === APPLICATION_STATUS.ApprovedByReviewer) {
-      return applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer;
-    }else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
-      return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
-    }else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
-      return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
-    }else if (filterValue === APPLICATION_STATUS.RejectedByReviewer) {
-      return applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer;
-    } else {
-      return applicationData
+    const matchesSearch = applicationData.applicationName.toLowerCase().includes(searchQuery.toLowerCase());
+    if (matchesSearch) {
+      if (filterValue === APPLICATION_STATUS.ApplicationSent) {
+        return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
+      } else if (filterValue === APPLICATION_STATUS.ApprovedByReviewer) {
+        return applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer;
+      }else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
+        return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
+      }else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
+        return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
+      }else if (filterValue === APPLICATION_STATUS.RejectedByReviewer) {
+        return applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer;
+      } else {
+        return applicationData
+      }
     }
+    return false;
   });
 
   const handleViewClick = (applicationId) => {
@@ -123,6 +132,22 @@ const ApplicantApplicationList = () => {
           >
             Rejected By Admin
           </button>
+        </div>
+
+        {/* <div className="container w-full px-4 mx-auto sm:px-8"> */}
+        <div className="my-2 flex max-sm:flex-col justify-center">
+        <div className="relative sm:ml-10 w-1/4 max-sm:w-2/3 max-sm:ml-4">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <i className="fi fi-rr-form mt-1"></i>
+            </span>
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={handleSearch}
+              placeholder="Search application name"
+              className="pl-10 pr-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+            />
+          </div>
         </div>
 
         {isLoading ? (

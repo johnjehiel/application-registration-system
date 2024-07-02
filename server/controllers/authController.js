@@ -1,13 +1,17 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 
 const User = require("../model/userSchema");
+const EmailToken = require("../model/emailTokenSchema");
 const nodemailer = require("nodemailer")
 const jwt = require("jsonwebtoken")
 const sendToken = require('../utils/jwt');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require("../utils/ErrorHandler");
 const { ROLES } = require("../utils/Constants");
+const sendEmail = require("../utils/sendEmail");
+// const emailTokenSchema = require("../model/emailTokenSchema");
 
 // old
 const register = async (req, res,next) => {
@@ -150,6 +154,8 @@ const registerUser = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler('phone number already exists', 400));
     }
 
+
+
     const user = await User.create({
         name,
         email,
@@ -157,9 +163,42 @@ const registerUser = catchAsyncError(async (req, res, next) => {
         phone
     });
 
-    sendToken(user, 201, res)
+    const token = await new EmailToken({
+			userId: user._id,
+			token: crypto.randomBytes(32).toString("hex"),
+		}).save();
+
+    const url = `${process.env.CLIENT_URL}/signup/${user.id}/verify/${token.token}`;
+		await sendEmail(user.email, "Verify Email", url);
+
+		res.status(201)
+			 .send({ success:true, user: user, message: "An Email sent to your account please verify" });
+
+    // sendToken(user, 201, res)
 
 })
+
+const verifyEmail = async (req, res) => {
+  try {
+		const user = await User.findOne({ _id: req.params.id });
+		if (!user) return res.status(400).send({ message: "Invalid link - user" });
+
+		const token = await EmailToken.findOne({
+			userId: user._id,
+			token: req.params.token,
+		});
+		if (!token) return res.status(400).send({ message: "Invalid link - token" });
+
+		await User.updateOne({ _id: user._id }, { emailVerified: true });
+
+		await token.remove();
+
+		res.status(200).send({ message: "Email verified successfully" });
+	} catch (error) {
+		res.status(500).send({ message: "Internal Server Error" });
+	}
+}
+
 
 const getUserProfile = catchAsyncError(async (req, res, next) => {
   const user = await User.findById(req.user.id)
@@ -551,7 +590,7 @@ const emailVerificationLink = async (req, res,next) => {
 
 
 
-
+/*
 const verifyEmail = async (req, res,next) => {
   const {id,token} = req.params
   try {
@@ -578,7 +617,7 @@ const verifyEmail = async (req, res,next) => {
 
   }
 }
-
+*/
 
 
 
@@ -668,8 +707,25 @@ const verifyEmail = async (req, res,next) => {
     if(!await user.isValidPassword(password)){
         return next(new ErrorHandler('Invalid email or password', 401))
     }
+    
+    if (!user.verified) {
+			let token = await EmailToken.findOne({ userId: user._id });
+			if (!token) {
+				token = await new EmailToken({
+					userId: user._id,
+					token: crypto.randomBytes(32).toString("hex"),
+				}).save();
+				const url = `${process.env.CLIENT_URL}/signup/${user._id}/verify/${token.token}`;
+				await sendEmail(user.email, "Verify Email", url);
+			}
 
-    sendToken(user, 201, res)
+			return res
+				.status(201)
+				.send({ message: "An Email sent to your account please verify" });
+		} else {
+      sendToken(user, 201, res)
+    }
+
     
 })
 

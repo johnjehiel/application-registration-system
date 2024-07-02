@@ -28,6 +28,7 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./route/ProtectedRoute";
 import { ROLES } from "./components/Constants";
 import LoadingSpinner from "./components/LoadingSpinner";
+import EmailVerify from "./components/verifications/VerifyEmail";
 // import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
@@ -51,6 +52,7 @@ const App = () => {
                                     : loading ? <LoadingSpinner /> :<Navigate to='/login'/>} />
             
             <Route path="/signup" element={<Signup />} />
+			      <Route path="/signup/:id/verify/:token" element={<EmailVerify />} />
             <Route path="/login" element={<Login />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/application-form" element={<ProtectedRoute allowedRoles={[ROLES.applicant]}><ApplicationForm/></ProtectedRoute>}/>

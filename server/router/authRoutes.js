@@ -27,6 +27,7 @@ router.post('/login', authController.loginUser);
 
 // router.get('/logout/:userId', authController.logout);
 router.get('/logout', authController.logoutUser);
+router.get('/register/:id/verify/:token', authController.verifyEmail);
 
 
 // router.get('/about', authenticate, authController.about);

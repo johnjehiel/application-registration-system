@@ -61,8 +61,10 @@ const Login = () => {
   }
 
   useEffect(() => {
+        console.log([error, isAuthenticated, dispatch, navigate])
         if(isAuthenticated) {
             navigate('/')
+            return ;
         }
         if(error)  {
             toast(error, {
@@ -72,7 +74,7 @@ const Login = () => {
             })
             return
         }
-    },[error, isAuthenticated, dispatch, navigate])
+    },[])
   return (
     <>
     <MetaData title={`Sign In`} />

@@ -6,6 +6,7 @@ import {
     clearError,
     registerFail,
     registerRequest,
+    registerEmailSuccess,
     registerSuccess,
     loadUserRequest,
     loadUserSuccess,
@@ -23,7 +24,8 @@ import {
     forgotPasswordFail,
     resetPasswordRequest,
     resetPasswordSuccess,
-    resetPasswordFail
+    resetPasswordFail,
+    loginEmailSent
 } from '../slices/authSlice';
 
 import {
@@ -70,12 +72,14 @@ export const register = (userData) => async (dispatch) => {
         }
 
         const { data }  = await axios.post(`${process.env.REACT_APP_SERVER_URL}/register`,userData, config);
-        dispatch(registerSuccess(data))
+        dispatch(registerEmailSuccess())
     } catch (error) {
         dispatch(registerFail(error.response.data.message))
     }
 
 }
+
+
 
 export const loadUser =  async (dispatch) => {
 

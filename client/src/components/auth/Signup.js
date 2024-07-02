@@ -94,13 +94,14 @@ const Signup = () => {
       formData.append('password', password)
       formData.append('phone', phone);
       dispatch(register(formData))
+      toast.success("Verification Email Sent")
       setIsLoading(false);
     }
 
     useEffect(()=>{
         if(isAuthenticated) {
-            navigate('/');
-            return
+          navigate('/');
+          return
         }
         if(error)  {
             toast(error, {

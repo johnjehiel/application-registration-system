@@ -5,7 +5,8 @@ const authSlice = createSlice({
     name: 'auth',
     initialState: {
         loading: true,
-        isAuthenticated: false
+        isAuthenticated: false,
+        emailSent: false
     },
     reducers: {
         loginRequest(state, action){
@@ -18,14 +19,23 @@ const authSlice = createSlice({
             return {
                 loading: false,
                 isAuthenticated: true,
-                user: action.payload.user
+                user: action.payload.user,
+                emailSent: false
+            }
+        },
+        loginEmailSent(state, action) {
+            return {
+                ...state,
+                loading: false,
+                emailSent: true
             }
         },
         loginFail(state, action){
             return {
                 ...state,
                 loading: false,
-                error:  action.payload
+                error:  action.payload,
+                emailSent: false
             }
         },
         clearError(state, action){
@@ -45,6 +55,15 @@ const authSlice = createSlice({
                 loading: false,
                 isAuthenticated: true,
                 user: action.payload.user
+            }
+        },
+        registerEmailSuccess(state, action){
+            return {
+                ...state,
+                loading: false,
+                // isAuthenticated: true,
+                emailSent: true
+                // user: action.payload.user
             }
         },
         registerFail(state, action){
@@ -190,8 +209,10 @@ export const {
     clearError,
     registerRequest,
     registerSuccess,
+    registerEmailSuccess,
     registerFail,
     loadUserRequest,
+    loginEmailSent,
     loadUserSuccess,
     loadUserFail,
     logoutFail,

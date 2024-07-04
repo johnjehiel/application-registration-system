@@ -11,14 +11,11 @@ import Login from "./components/auth/Login";
 import ErrorPage from "./components/ErrorPage";
 import AdminDashboard from "./components/dashboard/AdminDashboard";
 import Footer from "./components/Footer";
-// import { initialState, reducer } from "./reducer/UseReducer";
 
 import "react-toastify/dist/ReactToastify.css";
-// import Unauthorized from "./components/Unauthorized";
 
 import ApplicationForm from "./components/applications/ApplicationForm";
 import ApplicationView from "./components/applications/ApplicationView";
-// import EditApplication from "./components/applications/EditApplication";
 import ReviewerDashboard from "./components/dashboard/ReviewerDashboard";
 import ApplicantDashboard from "./components/dashboard/ApplicantDashboard";
 import Signup from "./components/auth/Signup";
@@ -28,16 +25,13 @@ import { useSelector } from "react-redux";
 import ProtectedRoute from "./route/ProtectedRoute";
 import { ROLES } from "./components/Constants";
 import LoadingSpinner from "./components/LoadingSpinner";
-// import { CalendarView } from "./components/CalendarView";
 
 export const UserContext = createContext();
 const App = () => {
-  const { user, isAuthenticated, loading } = useSelector(state => state.authState)
+  const { user, loading } = useSelector(state => state.authState)
   axios.defaults.withCredentials = true;
   useEffect(() => {
-    // if (isAuthenticated) {
       store.dispatch(loadUser)
-    // }
   },[])
   return (
 
@@ -55,19 +49,7 @@ const App = () => {
             <Route path="/logout" element={<Logout />} />
             <Route path="/application-form" element={<ProtectedRoute allowedRoles={[ROLES.applicant]}><ApplicationForm/></ProtectedRoute>}/>
             <Route exact path="/application-view/:applicationId" element={<ProtectedRoute allowedRoles={[ROLES.applicant, ROLES.reviewer, ROLES.admin]}><ApplicationView/></ProtectedRoute>} />
-            
             <Route path="/*" element={<ErrorPage />} />
-
-            {/* YET TO COMPLETE /application-edit */}
-            {/* <Route exact path="/application-edit/:applicationId" element={(state.role === ROLES.admin || (process.env.REACT_APP_HOD_FEATURE &&  state.role === "hod")) ? <EditApplication/> : <Unauthorized />} /> */}
-
-            
-            {/* <Route path="/" element={<Home />} /> */}
-            {/* <Route path="/calendar" element={<CalendarView />} /> */}
-            {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}
-            {/* <Route path="/forgotPassword/:id/:token" element={<ForgotPassword />} /> */}
-            {/* <Route path="/passwordReset" element={<PasswordReset />} /> */}
-            {/* <Route path="/verifyEmail/:id/:token" element={<VerifySuccess/>} />        */}
 
           </Routes>
           

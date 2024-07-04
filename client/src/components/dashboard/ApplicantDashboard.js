@@ -1,7 +1,6 @@
 import React from 'react'
 import ApplicantApplicationList from '../applications/ApplicantApplicationList'
 import MetaData from '../layouts/MetaData'
-// import BookingFaculty from '../bookings/BookingsFaculty'
 
 const ApplicantDashboard = () => {
   return (

@@ -3,15 +3,9 @@ import { useNavigate } from "react-router-dom"
 import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
-// import { format } from "date-fns"
 import { APPLICATION_STATUS } from "../Constants";
-// import { useSelector } from "react-redux";
-
-// import BookingForm from "./BookingForm";
-// import {ApplicationSent , ApprovedByAdmin,ApprovedByReviewerStep,RejectedByAdmin,ApprovedByReviewerStep} from "../Steps"
 const ReviewerApplicationList = () => {
-  // const { user, isAuthenticated } = useSelector(state => state.authState);
-  // const [emailVerified, setEmailVerified] = useState(false);
+
   const navigate = useNavigate();
   const [applicationData, setApplicationData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +25,6 @@ const ReviewerApplicationList = () => {
       });
 
       const data = response.data;
-      //consolelog(data);
 
       const sortedApplicationData = data.application.sort((a, b) => {
         // Convert the event date strings to Date objects and compare them
@@ -39,21 +32,13 @@ const ReviewerApplicationList = () => {
       });
 
       setApplicationData(sortedApplicationData);
-
-      // setApplicationData(data.bookings);
       setIsLoading(false);
-
-
       if (response.status !== 200) {
 
         throw new Error(response.status);
       }
     } catch (error) {
-      //consolelog(error);
       if (error.response.status === 401) {
-      //   toast.warn("Unauthorized Access! Please Login!", {
-      //     toastId: 'Unauthorized'
-      // })
         navigate("/login");
       }
     }
@@ -65,10 +50,6 @@ const ReviewerApplicationList = () => {
       getApplicationData();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
-  // navigate(`/bookingForm/${hallId}/${hallName}`)
-
 
   const updateApplication = async (applicationId, isApproved) => {
     setIsLoading(true);
@@ -182,7 +163,6 @@ const ReviewerApplicationList = () => {
           </button>
         </div>
 
-        {/* <div className="container w-full px-4 mx-auto sm:px-8"> */}
         <div className="my-2 flex max-sm:flex-col justify-center">
           <div className="relative w-1/4 max-sm:w-2/3 max-sm:ml-4">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -242,7 +222,6 @@ const ReviewerApplicationList = () => {
 
                     {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
                       filteredApplications.map((application) => (
-                        // <div key={application._id} className="my-2 ">
 
                         <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
                           application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
@@ -267,24 +246,18 @@ const ReviewerApplicationList = () => {
                           <td className="px-5 py-5 text-m border-gray-200 w-1/12">
 
                             {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-                              // <ApprovedByAdmin />
                               <p className="text-green-600 font-bold whitespace-no-wrap">
                                 {application.isApproved}
                               </p>
-                              // <p className="text-m text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-3xl text-green-500 font-black">
-                              // </p>
                             )}
                             {application.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
-                              // <ApprovedByReviewerStep />
                               <p className="text-blue-600 font-bold  whitespace-no-wrap">
-                                {/* {application.isApproved} */}
                                 Forwarded To Admin
                               </p>
                             )}
 
                           {application.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
                               <p className="text-red-900 font-bold  whitespace-no-wrap">
-                                {/* {application.isApproved} */}
                                 Rejected By Reviewer
                               </p>
 
@@ -298,7 +271,6 @@ const ReviewerApplicationList = () => {
                             )}
                           {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
                               <p className="text-orange-600 font-bold  whitespace-no-wrap">
-                              {/* {application.isApproved} */}
                                 Pending
                               </p>
 
@@ -309,7 +281,6 @@ const ReviewerApplicationList = () => {
 
                           <td className="px-5 py-5 text-m border-gray-200 w-3/12">
                             <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"><i className="fi fi-rr-eye"></i></button>
-                            
                             
                             {
                               !application.isFrozen &&
@@ -328,47 +299,7 @@ const ReviewerApplicationList = () => {
                                 onClick={() => updateApplication(application._id, APPLICATION_STATUS.RejectedByReviewer)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none"><i className="fi fi-rr-cross"></i></button>
                             }
                           </td>
-
-                          {/* <td className="px-5 py-5 text-m border-gray-200 w-3/12">
-                            <div className="flex justify-between items-center space-x-2">
-                              <button
-                                onClick={() => handleViewClick(application._id)}
-                                className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-gray-600 rounded hover:bg-gray-700 focus:outline-none"
-                              >
-                                <i className="fi fi-rr-eye mr-2"></i>
-                                View
-                              </button>
-
-                              {!application.isFrozen &&
-                                application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
-                                application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
-                                application.isApproved !== APPLICATION_STATUS.ApprovedByReviewer && (
-                                  <button
-                                    onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByReviewer)}
-                                    className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-green-600 rounded hover:bg-green-700 focus:outline-none"
-                                  >
-                                    <i className="fi fi-rr-check mr-2"></i>
-                                    Approve
-                                  </button>
-                                )}
-
-                              {!application.isFrozen &&
-                                application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
-                                application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
-                                application.isApproved !== APPLICATION_STATUS.RejectedByReviewer && (
-                                  <button
-                                    onClick={() => updateApplication(application._id, APPLICATION_STATUS.RejectedByReviewer)}
-                                    className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-red-600 rounded hover:bg-red-700 focus:outline-none"
-                                  >
-                                    <i className="fi fi-rr-cross mr-2"></i>
-                                    Reject
-                                  </button>
-                                )}
-                            </div>
-                          </td> */}
-
                         </tr>
-                        // </div>
                       ))
                     ) : (
 
@@ -379,10 +310,6 @@ const ReviewerApplicationList = () => {
                           </p>
                         </td>
                       </tr>
-
-
-                      // <h2 className="text-2xl font-bold text-zinc-700  text-center mt-10">No applications Requests found.</h2>
-
                     )}
 
                   </tbody>
@@ -390,13 +317,7 @@ const ReviewerApplicationList = () => {
               </div>
             </div>
         </div>
-
-
-
-
           )}
-
-
       </div>
     </>
   );

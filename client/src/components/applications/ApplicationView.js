@@ -287,15 +287,11 @@ const ApplicationView = () => {
                     <p className="text-s text-red-600	 font-bold">
                       {applicationData.rejectionReason}
                     </p>
-                    {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                   </div>
                 </div>
               )}
 
               <div className="mt-6 ">
-                {/* <div>
-                              <p className="text-m  text-xl sm:text-3xl md:text-4xl  lg:text-3xl xl:text-3xl  text-zinc-700 font-bold ">Status</p>
-                            </div> */}
                             
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                   <ApprovedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
@@ -348,12 +344,6 @@ const ApplicationView = () => {
 
                 {user.role === ROLES.reviewer && (
                   <>
-                    {/* <button
-                      onClick={() => handleEditClick(applicationData._id)}
-                      className="   leading-none text-gray-600 py-3 px-5 bg-yellow-200 rounded hover:bg-yellow-300 focus:outline-none">
-                      Edit
-                      </button> */}
-
                     { !applicationData.isFrozen &&
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
                       applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
@@ -378,21 +368,15 @@ const ApplicationView = () => {
                         Reject
                       </button>
                     }
-
-                    {/* <button
-                  onClick={() => deleteBooking(applicationData._id)}
-                  // onClick={() => handleDeleteModal(applicationData._id)}
-                   className="   leading-none text-gray-600 py-3 px-5 bg-red-400 rounded hover:bg-red-500 focus:outline-none">Delete</button>
-            */}
                   </>
                 )}
 
               </div>
               
               {applicationData.isFrozen && 
-                <div className="px-5 py-5 text-l flex font-bold  bg-green-300 justify-center border-gray-200 rounded">
-                   <h1>
-                      Application Confirmed
+                <div className={"px-5 py-5 text-l flex font-bold  bg-blue-300 justify-center border-gray-200 rounded"}>
+                   <h1 >
+                      Application is {applicationData.isApproved} and Freezed
                    </h1>
                 </div>
               }

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const cors = require("cors")
 const path = require("path")
-// const connectDB = require("./DB/conn");
+
 const cookieParser = require("cookie-parser");
 const errorMiddleware = require('./middleware/error');
 

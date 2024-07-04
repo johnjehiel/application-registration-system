@@ -2,14 +2,6 @@ const mongoose = require("mongoose");
 
 const DB = process.env.DATABASE;
 mongoose.set('strictQuery', false)
-// try {
-//     mongoose.connect(DB, { useNewUrlParser: true, useUnfiedTopology: true }, () =>
-//       // console.log("conection successful ")
-//     );
-//   }
-//    catch (error) {
-//     // console.log(" no connection ");
-//   }
 
 const connectDB = async () => {
   try {

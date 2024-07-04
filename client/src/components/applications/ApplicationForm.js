@@ -4,19 +4,13 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
 
-import notVerified from "../../assets/notVerified.jpg";
 import MetaData from "../layouts/MetaData";
 import { useSelector } from 'react-redux';
 
-// const ApplicationForm = () => {
-//   return <h1>applicantion form</h1>
-// }
-
 const ApplicationForm = () => {
-  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
+  const { user } = useSelector(state => state.authState)
   const navigate = useNavigate();
   const [authStatus, setAuthStatus] = useState("");
-//   const [emailVerified, setEmailVerified] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [file, setFile] = useState(null);
   const [applicationData, setApplicationData] = useState({
@@ -37,56 +31,6 @@ const ApplicationForm = () => {
   const altPhoneRef =useRef(null);
   const desciptionRef =useRef(null);
   const fileRef =useRef(null);
-
-//   const userContact = async () => {
-//     try {
-//       const response = await axios.get(
-//         `${process.env.REACT_APP_SERVER_URL}/getdata`,
-//         {
-//           withCredentials: true, // include credentials in the request
-//           headers: {
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       );
-//     //   console.log("response.data", response.data);
-//       const data = response.data;
-//       //consolelog(data);
-
-//       let status;
-//       // if(data.role === "admin"){
-//       //   status = APPLICATION_STATUS.ApprovedByAdmin
-//       // }else if (data.role === "hod"){
-//       //   status = APPLICATION_STATUS.ApprovedByReviewer
-//       // }
-
-// //       if (data.emailVerified) {
-// //         setEmailVerified(true);
-// //       }
-
-//       setApplicationData({
-//         ...applicationData,
-//         userId: data._id,
-//         applicantName: data.name,
-//         email: data.email,
-//         // department: data.department,
-//         // institution: data.institution,
-//         role: data.role,
-//         description: data.description,
-//         isApproved: status,
-//         phoneNumber: data.phone.toString(),
-//       });
-
-//       setIsLoading(false);
-
-//       if (response.status !== 200) {
-//         throw new Error(response.error);
-//       }
-//     } catch (error) {
-//       // //consolelog(error);
-//       navigate("/login");
-//     }
-//   };
 
   const InitializeApplicationData = () => {
     setApplicationData({
@@ -122,8 +66,6 @@ const ApplicationForm = () => {
       setFile(selectedFile);
     }
   };
-
-  // send to backend
 
   const submitForm = async (e) => {
     e.preventDefault();
@@ -198,7 +140,6 @@ const ApplicationForm = () => {
           altNumber,
           file,
           description,
-          // isApproved,
         },
         {
           withCredentials: true, // To include credentials in the request
@@ -210,7 +151,6 @@ const ApplicationForm = () => {
       
       const data = response.data;
       if (data.message === "Application created successfully") {
-        // console.log(response.data);
         toast.success("Application created successfully!");
         navigate("/");
       } else {
@@ -220,8 +160,6 @@ const ApplicationForm = () => {
       if (error.response) {
         if (error.response.status === 422) {
           const data = error.response.data;
-          // Handle validation errors
-          // You can set specific error messages for different fields if needed
           if (data && data.error) {
             const errorMessage = data.error;
             setAuthStatus(errorMessage);
@@ -274,7 +212,6 @@ const ApplicationForm = () => {
                     placeholder="Applicant Name"
                     ref={applicantNameRef}
                   />
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
 
                 <div className="w-full md:w-1/2 px-3">
@@ -313,7 +250,6 @@ const ApplicationForm = () => {
                     placeholder="Phone Number"
                     ref={phoneRef}
                   />
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
 
                 <div className="w-full md:w-1/2 px-3">
@@ -389,7 +325,6 @@ const ApplicationForm = () => {
               <div className="flex flex-wrap -mx-3 mb-6">
                 <div className="flex justify-between w-full px-3">
                   <button
-                    // onClick={handleConfirmModal}
                     onClick={submitForm}
                     className="shadow bg-indigo-600 hover:bg-indigo-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-6 rounded"
                     type="submit">

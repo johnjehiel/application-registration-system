@@ -3,16 +3,12 @@ import { useNavigate } from "react-router-dom"
 import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
-// import { format } from "date-fns"
 import { APPLICATION_STATUS } from "../Constants";
 const AdminApplicationList = () => {
   const navigate = useNavigate();
   const [applicationData, setApplicationData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [filterValue, setFilterValue] = useState("all");
-  // const [filterValues, setFilterValues] = useState(["all"]);
-  // const [emailVerified, setEmailVerified] = useState(false);
-  // const [userData, setUserData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState('');
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
@@ -41,7 +37,6 @@ const AdminApplicationList = () => {
       });
 
       const data = response.data;
-      // console.log(data);
 
       const sortedApplicationData = data.applications.sort((a, b) => {
         // Convert the event date strings to Date objects and compare them
@@ -49,8 +44,6 @@ const AdminApplicationList = () => {
       });
 
       setApplicationData(sortedApplicationData);
-
-      // setApplicationData(data.bookings);
       setIsLoading(false);
 
 
@@ -59,11 +52,7 @@ const AdminApplicationList = () => {
         throw new Error(response.status);
       }
     } catch (error) {
-      //consolelog(error);
       if (error.response.status === 401) {
-        // toast.warn("Unauthorized Access! Please Login!", {
-        //   toastId: 'Unauthorized'
-        // })
         navigate("/login");
       }
     }
@@ -194,12 +183,7 @@ const AdminApplicationList = () => {
           >
             Rejected
           </button>
-          {/* <button
-            className={`rounded-full px-4 py-2 mx-4 focus:outline-none ${filterValue === "My Requests" ? "bg-indigo-100 text-indigo-800" : "bg-white text-gray-800   hover:bg-gray-100"}`}
-            onClick={() => handleFilter("My Requests")}
-          >
-            My Requests
-          </button> */}
+
         </div>
         {showModal && (
         <div className="fixed top-0 left-0 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
@@ -231,8 +215,6 @@ const AdminApplicationList = () => {
           </div>
         </div>
       )}
-
-        {/* <div className="container w-full px-4 mx-auto sm:px-8 "> */}
         <div className="my-2 flex max-sm:flex-col justify-center">
           <div className="relative w-1/4 max-sm:w-2/3 max-sm:ml-4">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -291,7 +273,6 @@ const AdminApplicationList = () => {
 
                       {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
                         filteredApplications.map((application) => (
-                          // <div key={application._id} className="">
 
                           <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
                             application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
@@ -316,12 +297,10 @@ const AdminApplicationList = () => {
                             <td className="px-5 py-5 text-m border-gray-200 w-1/12">
 
                               {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-                                // <ApprovedByAdmin />
+               
                                 <p className="text-green-600 font-bold whitespace-no-wrap">
                                   {application.isApproved}
                                 </p>
-                                // <p className="text-m text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-3xl text-green-500 font-black">
-                                // </p>
                               )}
                               {(application.isApproved === APPLICATION_STATUS.ApprovedByReviewer &&
                                 <p className="text-blue-600 font-bold  whitespace-no-wrap">
@@ -329,14 +308,12 @@ const AdminApplicationList = () => {
                                 </p>
                               )}
                               {(application.isApproved === APPLICATION_STATUS.RejectedByReviewer &&  
-                                // <ApprovedByReviewerStep />
                                 <p className="text-red-900 font-bold  whitespace-no-wrap">
                                 Rejected By Reviewer
                                 </p>
                               )}
 
                               {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
-                                // <ApprovedByReviewerStep />
                                 <p className="text-red-600 font-bold  whitespace-no-wrap">
                                   Pending
                                 </p>
@@ -375,7 +352,6 @@ const AdminApplicationList = () => {
 
 
                           </tr>
-                          // </div>
                         ))
                       ) : (
 
@@ -386,10 +362,6 @@ const AdminApplicationList = () => {
                             </p>
                           </td>
                         </tr>
-
-
-                        // <h2 className="text-2xl font-bold text-zinc-700  text-center mt-10">No Bookings Requests found.</h2>
-
                       )}
 
                     </tbody>

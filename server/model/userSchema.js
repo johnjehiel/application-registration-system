@@ -38,31 +38,6 @@ const userSchema = new mongoose.Schema({
   }
 );
 
-// yaha per password hashing ker rahe hai
-
-// userSchema.pre("save", async function (next) {
-//   if (this.isModified("password")) {
-//     this.password = await bcrypt.hash(this.password, 12);
-//     this.cpassword = await bcrypt.hash(this.password, 12);
-//   }
-//   next();
-// });
-
-// // generating jwt token
-
-// userSchema.methods.generateAuthToken = async function () {
-//   try {
-//     let token = jwt.sign({ _id: this._id }, process.env.SECRET_KEY, { expiresIn: '2d' });
-//     this.tokens = this.tokens.concat({ token: token });
-//     await this.save();
-//     return token;
-//   } catch (error) {
-//     // console.log(error);
-//   }
-// };
-
-// new
-
 userSchema.pre('save', async function (next){
   if(!this.isModified('password')){
       next();

@@ -4,9 +4,6 @@ import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
 import { APPLICATION_STATUS } from "../Constants";
 
-
-// import {ApplicationSent , ApprovedByAdmin,ApprovedByReviewerStep,RejectedByAdmin,ApprovedByReviewerStep} from "../Steps"
-
 const ApplicantApplicationList = () => {
   const navigate = useNavigate();
   const [applicationData, setApplicationData] = useState({});
@@ -25,7 +22,6 @@ const ApplicantApplicationList = () => {
       });
 
       const data = response.data;
-    //   console.log("applicant-applications " ,data);
       setApplicationData(data.application);
    
 
@@ -34,16 +30,13 @@ const ApplicantApplicationList = () => {
         throw new Error(response.error);
       }
     } catch (error) {
-      
-      //consolelog(error);
-      // navigate("/login");
+
     }
   };
 
 
 
   useEffect(() => {
-    // userData();
     getApplicationData();
     // console.log("applications", applicationData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -134,7 +127,6 @@ const ApplicantApplicationList = () => {
           </button>
         </div>
 
-        {/* <div className="container w-full px-4 mx-auto sm:px-8"> */}
         <div className="my-2 flex max-sm:flex-col justify-center">
         <div className="relative sm:ml-10 w-1/4 max-sm:w-2/3 max-sm:ml-4">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -181,7 +173,6 @@ const ApplicantApplicationList = () => {
 
                     {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
                         filteredApplications.map((application) => (
-                        // <div key={booking._id} className="my-2 ">
 
                         <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
                           application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
@@ -201,24 +192,20 @@ const ApplicantApplicationList = () => {
                             <td className="px-5 py-5 text-m border-gray-200 w-2/12">
 
                             {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-                                // <ApprovedByAdmin />
+
                                 <p className="text-green-600 font-bold whitespace-no-wrap">
                                 {application.isApproved}
                                 </p>
-                                // <p className="text-m text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-3xl text-green-500 font-black">
-                                // </p>
+
                             )}
                             {application.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
-                                // <ApprovedByReviewerStep />
                                 <p className="text-blue-600 font-bold  whitespace-no-wrap">
-                                {/* {application.isApproved} */}
                                 Forwarded To Admin
                                 </p>
                             )}
 
                             {application.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
                                 <p className="text-red-900 font-bold  whitespace-no-wrap">
-                                {/* {application.isApproved} */}
                                 Rejected By Reviewer
                                 </p>
 
@@ -232,7 +219,6 @@ const ApplicantApplicationList = () => {
                             )}
                             {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
                                 <p className="text-orange-600 font-bold  whitespace-no-wrap">
-                                {/* {application.isApproved} */}
                                 Pending
                                 </p>
                                 )
@@ -246,7 +232,6 @@ const ApplicantApplicationList = () => {
                             </td>
 
                         </tr>
-                        // </div>
                         ))
                     ) : (
 
@@ -257,23 +242,14 @@ const ApplicantApplicationList = () => {
                             </p>
                         </td>
                         </tr>
-
-
-                        // <h2 className="text-2xl font-bold text-zinc-700  text-center mt-10">No applications Requests found.</h2>
-
                     )}
-
                     </tbody>
                 </table>
                 </div>
             </div>
          </div>
-
         )
         }
-
-
-
       </div>
     </>
   );

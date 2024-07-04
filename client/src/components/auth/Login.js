@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-// import { UserContext } from "./../../App";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
@@ -11,7 +10,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 const Login = () => {
 
-  // const { dispatch } = useContext(UserContext)
   const [isLoading, setIsLoading] = useState(false);
   
   const navigate = useNavigate();
@@ -66,7 +64,6 @@ const Login = () => {
         }
         if(error)  {
             toast(error, {
-                // position: toast.POSITION.BOTTOM_CENTER,
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError) }
             })
@@ -82,11 +79,6 @@ const Login = () => {
       <section className="text-gray-600 body-font min-h-screen flex items-center justify-center bg-white">
         <div className="lg:w-2/6 md:w-1/2  bg-white shadow-2xl shadow-blue-200 rounded-lg p-8 flex flex-col md:ml-auto md:mr-auto mt-10 md:mt-0">
           <form method="POST">
-            {/* <h2 className="text-gray-900 font-medium text-3xl title-font mt-10 mb-5">
-              Login
-            </h2> */}
-
-
 
             <h3 className="text-3xl my-8 sm:text-4xl leading-normal font-extrabold tracking-tight text-gray-900">
               Sign <span className="text-indigo-600">In</span>
@@ -133,20 +125,6 @@ const Login = () => {
               />
             </div>
 
-            {/* <div className="my-4">
-              <p className="text-s text-red-600	 font-bold">
-                {authStatus}
-              </p>
-            </div> */}
-
-
-            {/* <div className="my-4">
-                <Link to="/passwordReset" className=" text-m font-bold  hover:underline">
-                    Forgot Your Password?
-
-                  </Link>
-            </div> */}
-
             {/* <CaptchaComponent /> */}
 
             <div className="mx-auto w-fit">
@@ -155,7 +133,6 @@ const Login = () => {
                   type="submit"
                   onClick={loginUser}
                   className="text-white bg-indigo-600 shadow focus:shadow-outline focus:outline-none border-0 py-2 px-10 font-bold  hover:bg-indigo-800 rounded text-lg"
-                  // disabled={loading}
                 >
                   Login
                 </button>
@@ -171,7 +148,6 @@ const Login = () => {
               </p>
             </div>
           </form>
-
         </div>
       </section>
     }

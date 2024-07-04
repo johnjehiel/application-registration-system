@@ -104,7 +104,6 @@ const Signup = () => {
         }
         if(error)  {
             toast(error, {
-                // position: toast.POSITION.TOP_CENTER,
                 type: 'error',
                 onOpen: ()=> { dispatch(clearAuthError) }
             })
@@ -235,7 +234,6 @@ const Signup = () => {
                     type="submit"
                     onClick={submitHandler}
                     className="text-white bg-indigo-600 shadow focus:shadow-outline focus:outline-none border-0 py-2 px-10 font-bold  hover:bg-indigo-800 rounded text-lg"
-                    // disabled={loading}
                     >
                     Sign Up
                   </button>

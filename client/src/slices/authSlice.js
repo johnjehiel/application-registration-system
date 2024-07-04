@@ -86,97 +86,6 @@ const authSlice = createSlice({
                 error:  action.payload
             }
         },
-        updateProfileRequest(state, action){
-            return {
-                ...state,
-                loading: true,
-                isUpdated: false
-            }
-        },
-        updateProfileSuccess(state, action){
-            return {
-                ...state,
-                loading: false,
-                user: action.payload.user,
-                isUpdated: true
-            }
-        },
-        updateProfileFail(state, action){
-            return {
-                ...state,
-                loading: false,
-                error:  action.payload
-            }
-        },
-        clearUpdateProfile(state, action){
-            return {
-                ...state,
-                isUpdated: false
-            }
-        },
-        updatePasswordRequest(state, action){
-            return {
-                ...state,
-                loading: true,
-                isUpdated: false
-            }
-        },
-        updatePasswordSuccess(state, action){
-            return {
-                ...state,
-                loading: false,
-                isUpdated: true
-            }
-        },
-        updatePasswordFail(state, action){
-            return {
-                ...state,
-                loading: false,
-                error:  action.payload
-            }
-        },
-        forgotPasswordRequest(state, action){
-            return {
-                ...state,
-                loading: true,
-                message: null
-            }
-        },
-        forgotPasswordSuccess(state, action){
-            return {
-                ...state,
-                loading: false,
-                message: action.payload.message
-            }
-        },
-        forgotPasswordFail(state, action){
-            return {
-                ...state,
-                loading: false,
-                error: action.payload
-            }
-        },
-        resetPasswordRequest(state, action){
-            return {
-                ...state,
-                loading: true,
-            }
-        },
-        resetPasswordSuccess(state, action){
-            return {
-                ...state,
-                loading: false,
-                isAuthenticated: true,
-                user: action.payload.user
-            }
-        },
-        resetPasswordFail(state, action){
-            return {
-                ...state,
-                loading: false,
-                error: action.payload
-            }
-        },
         
     }
 });
@@ -196,19 +105,6 @@ export const {
     loadUserFail,
     logoutFail,
     logoutSuccess,
-    updateProfileFail,
-    updateProfileRequest,
-    updateProfileSuccess,
-    clearUpdateProfile,
-    updatePasswordFail,
-    updatePasswordSuccess,
-    updatePasswordRequest,
-    forgotPasswordFail,
-    forgotPasswordSuccess,
-    forgotPasswordRequest,
-    resetPasswordFail,
-    resetPasswordRequest,
-    resetPasswordSuccess,
  } = actions;
 
 export default reducer;

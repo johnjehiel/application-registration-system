@@ -14,16 +14,7 @@ const Navbar = () => {
   
   }; 
 
-// "Admin"
-
 const RenderUser = () => {
-  /*if (state.role === "admin") {
-    return (
-      <div>
-        <Link to="/halls">Halls</Link>
-      </div>
-    );
-  } else*/
   if (user?.role === ROLES.applicant) {
     return (
       <div>
@@ -31,13 +22,6 @@ const RenderUser = () => {
       </div>
     );
   }
-  /*else {
-    return (
-      <div>
-        <Link to="/halls">Halls</Link>
-      </div>
-    );
-  }*/
 };
 
   const RenderMenu = () => {
@@ -45,7 +29,6 @@ const RenderUser = () => {
     if (isAuthenticated) {       
       return (
         <>
-          {/* <Link to="/logout" className="mr-5 hover:text-gray-900">Logout</Link> */}
           <Link to="/logout">
             <button className="focus:outline-none lg:text-lg lg:font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700  md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  px-8 py-1 sm:py-3 text-sm">Logout</button>
           </Link>
@@ -58,8 +41,6 @@ const RenderUser = () => {
           <Link to="/login">
             <button className="focus:outline-none lg:text-lg font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700  md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  px-8 py-1 sm:py-3 text-sm">Sign In / Sign Up</button>
           </Link>
-          {/* <button className="focus:outline-none lg:text-lg lg:font-bold focus:ring-2 focus:ring-offset-2 focus:ring-indigo-700 hidden md:block bg-transparent transition duration-150 ease-in-out hover:bg-gray-200 rounded border border-indigo-700 text-indigo-700  sm:px-8 py-1 sm:py-3 text-sm">Sign In</button> */}
-
         </>
       )
     }
@@ -72,13 +53,7 @@ const RenderUser = () => {
       <div className="py-5 md:py-0 container mx-auto px-6 flex items-center justify-between">
           <Link to={"/"}>
         <div aria-label="Home. logo" className="flex justify-between items-center" role="img">
-          {/* <h1>asd</h1> */}
-           {/* <img className="w-12 md:w-auto" src="https://tuk-cdn.s3.amazonaws.com/can-uploader/centre_aligned_simple-Svg1.svg" alt="logo" /> */}
                       <img className=" w-24 md:w-64" src={logo} alt="logo" />
-
-             {/* <h1 className="text-xl sm:border-l-2  sm:text-3xl md:text-4xl lg:text-3xl xl:text-4xl text-center text-gray-800 font-black leading-7 ml-3 md:leading-10">
-               Book  <span className="text-indigo-700">It</span> </h1>
-          */}
         </div>
           </Link>
 
@@ -108,33 +83,13 @@ const RenderUser = () => {
                 <Link to="/">Home</Link>
               </li>
 
-
-              {/* <li className="text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10">
-                <Link to="/events">Events</Link>
-              </li>
-
               <li className="text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10">
-                <Link to="/calendar">Calendar</Link>
-              </li> */}
-
-              <li className="text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10">
-                {/* <Link to="/bookings">Bookings</Link> */}
                 <RenderUser/>
               </li>
-
-              {/* <li className="text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10">
-                <Link to="/contact">Contact</Link>
-              </li>
-              <li className="text-gray-700 hover:text-gray-900 cursor-pointer text-base lg:text-lg pt-10 md:pt-0 md:ml-5 lg:ml-10">
-                <Link to="/profile">Profile</Link> 
-              </li>*/}
             </ul>
           </div>
         </div>
         <RenderMenu />
-
-        
-
       </div>
     </nav>
 

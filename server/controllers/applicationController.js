@@ -251,7 +251,8 @@ const updateApplication = async (req, res, next) => {
       altNumber,
       description,
       rejectionReason,
-      isApproved
+      isApproved,
+      isFrozen
     } = req.body;
 
     const application = await Application.findByIdAndUpdate(
@@ -265,6 +266,7 @@ const updateApplication = async (req, res, next) => {
         description,
         isApproved,
         rejectionReason,
+        isFrozen
       },
       { new: true },
     );
@@ -289,8 +291,9 @@ const updateApplication = async (req, res, next) => {
   }
 };
 
+
+
 const getApplicationForReviewer = async (req, res, next) => {
-  const hodDepartment = req.user.department
   // console.log(hodDepartment);
   try {
     const application = await Application.find();
@@ -307,8 +310,6 @@ const getApplicationForAdmin = async (req, res, next) => {
     const adminEmail = req.user.email;
     const userId = req.user._id;
 
-    statusArray.unshift("Request Sent");
-
     const applications = await Application.find({
        isApproved: { $in: statusArray }
   }
@@ -317,7 +318,6 @@ const getApplicationForAdmin = async (req, res, next) => {
       select: '-password -cpassword -tokens -verifyToken' // Exclude the password and cpassword fields
     });
     
-    // console.log(applications);
     res.json({ applications });
 
   } catch (error) {

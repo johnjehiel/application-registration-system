@@ -159,19 +159,19 @@ const ApplicantApplicationList = () => {
         <div className="container w-full px-4 mx-auto sm:px-8 ">
             <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8 ">
                 <div className="inline-block min-w-full border overflow-hidden rounded-lg  shadow-xl shadow-blue-100 ">
-                <table className="min-w-full leading-normal    ">
+                <table className="min-w-full leading-normal">
                     <thead>
                     <tr className="bg-gray-200 border-gray-500  leading-normal  text-center">
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-3/12">
                         Application Name
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200 w-5/12">
                         Description
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
                         Status
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
                         Actions
                         </th>
                     </tr>
@@ -183,20 +183,22 @@ const ApplicantApplicationList = () => {
                         filteredApplications.map((application) => (
                         // <div key={booking._id} className="my-2 ">
 
-                        <tr key={application._id} className="border-gray-200 text-center border-b-2  ">
-                            <td className="px-5 py-5 font-bold text-m  bg-white  border-gray-200">
-                            <p className="text-gray-900 whitespace-no-wrap">
+                        <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
+                          application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
+                        }`}>
+                            <td className="px-5 py-5 font-bold text-m border-gray-200 w-3/12">
+                            <p className="whitespace-no-wrap">
                                 {application.applicationName}
                             </p>
                             </td>
-                            <td className="px-5 py-5 text-m bg-white  border-gray-200">
-                            <p className="text-gray-900 whitespace-no-wrap">
+                            <td className="px-5 py-5 text-m border-gray-200 w-5/12">
+                            <p className="whitespace-no-wrap">
                                 {application.description}
 
                             </p>
                             </td>
 
-                            <td className="px-5 py-5 text-m bg-white  border-gray-200">
+                            <td className="px-5 py-5 text-m border-gray-200 w-2/12">
 
                             {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                                 // <ApprovedByAdmin />
@@ -239,8 +241,8 @@ const ApplicantApplicationList = () => {
                             </td>
 
 
-                            <td className="px-5 py-5 text-m bg-white  border-gray-200">
-                            <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none">View</button>
+                            <td className="px-5 py-5 text-m border-gray-200 w-2/12">
+                            <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"><i className="fi fi-rr-eye"></i></button>
                             </td>
 
                         </tr>
@@ -249,7 +251,7 @@ const ApplicantApplicationList = () => {
                     ) : (
 
                         <tr className="border-gray-200 border-b justify-center">
-                        <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="7">
+                        <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="4">
                             <p className="text-gray-900 whitespace-no-wrap">
                             No Applications Requests found.
                             </p>

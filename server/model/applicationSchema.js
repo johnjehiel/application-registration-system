@@ -47,6 +47,11 @@ const applicationSchema = new mongoose.Schema(
         type: String,
         required: true
       }
+    },
+    isFrozen: {
+      type: Boolean,
+      default: false,
+      required: true
     }
   },
   {

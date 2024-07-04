@@ -62,7 +62,10 @@ const ApplicationView = () => {
     }
   };
 
-  const updateApplication = async (applicationId, isApproved) => {
+  const updateApplication = async (applicationId, isApproved, isFrozen, freeze) => {
+    if (isFrozen) {
+      return toast.error("application already frozen!");
+    }
     if (isApproved === APPLICATION_STATUS.RejectedByAdmin) {
       if (rejectionReason.trim() === "") {
         toast.error("Please provide a reason for rejection.");
@@ -77,6 +80,7 @@ const ApplicationView = () => {
         `${process.env.REACT_APP_SERVER_URL}/application-edit/${applicationId}`,
         {
           isApproved: isApproved,
+          isFrozen: freeze,
           rejectionReason:
             isApproved === APPLICATION_STATUS.ApprovedByAdmin ? null : rejectionReason,
         },
@@ -90,8 +94,11 @@ const ApplicationView = () => {
       );
       closeModal();
       getApplicationById();
-
-      toast.success(`Application ${isApproved} Successfull!`);
+      if (freeze) {
+        toast.success(`Application status finalized !`)
+      } else {
+        toast.success(`Application ${isApproved} Successfull!`);
+      }
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -284,21 +291,32 @@ const ApplicationView = () => {
                 {user.role === ROLES.admin && (
                   <>
                     {
+                      !applicationData.isFrozen &&
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                       onClick={() =>
-                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin)
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen, false)
                       }
                       className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
                         Approve
                       </button>
                     }
                     {
+                      !applicationData.isFrozen &&
                       applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                       <button
                       onClick={() => openModal(applicationData._id)}
                       className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
                         Reject
+                      </button>
+                    }
+                    {
+                      !applicationData.isFrozen &&
+                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                      <button
+                      onClick={() => updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen, true)}
+                      className="   leading-none text-gray-600 py-3 px-5 bg-blue-200 rounded hover:bg-blue-300 focus:outline-none">
+                        freeze
                       </button>
                     }
                   </>
@@ -312,23 +330,25 @@ const ApplicationView = () => {
                       Edit
                       </button> */}
 
-                    { applicationData.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
+                    { !applicationData.isFrozen &&
+                      applicationData.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
                       applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                       onClick={() =>
-                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer)
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer, applicationData.isFrozen, false)
                       }
                       className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
                         Approve
                       </button>
                     }
-                    { applicationData.isApproved !== APPLICATION_STATUS.RejectedByReviewer &&
+                    { !applicationData.isFrozen &&
+                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByReviewer &&
                       applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                         onClick={() =>
-                          updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer)
+                          updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer, applicationData.isFrozen, false)
                         }
                         className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
                         Reject
@@ -344,6 +364,14 @@ const ApplicationView = () => {
                 )}
 
               </div>
+              
+              {applicationData.isFrozen && 
+                <div className="px-5 py-5 text-l flex font-bold  bg-green-300 justify-center border-gray-200 rounded">
+                   <h1>
+                      Application Confirmed
+                   </h1>
+                </div>
+              }
             </form>
           </div>
         </div>
@@ -368,7 +396,7 @@ const ApplicationView = () => {
                 className="px-4 py-2 bg-red-500 text-white rounded mr-2"
                 // onClick={handleReject}
                 onClick={() =>
-                  updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin)
+                  updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin, applicationData.isFrozen, false)
                 }>
                 Reject
               </button>

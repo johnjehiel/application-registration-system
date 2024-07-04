@@ -217,19 +217,22 @@ const ReviewerApplicationList = () => {
             <div className="container w-full px-4 mx-auto sm:px-8 ">
             <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8 ">
               <div className="inline-block min-w-full border overflow-hidden rounded-lg  shadow-xl shadow-blue-100 ">
-                <table className="min-w-full leading-normal    ">
+                <table className="min-w-full leading-normal">
                   <thead>
                     <tr className="bg-gray-200 border-gray-500  leading-normal  text-center">
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
+                        Applicant Name
+                        </th>
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
                         Application Name
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200 w-4/12">
                         Description
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-1/12">
                         Status
                         </th>
-                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200">
+                        <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-3/12">
                         Actions
                         </th>
                     </tr>
@@ -241,20 +244,27 @@ const ReviewerApplicationList = () => {
                       filteredApplications.map((application) => (
                         // <div key={application._id} className="my-2 ">
 
-                        <tr key={application._id} className="border-gray-200 text-center border-b-2  ">
-                          <td className="px-5 py-5 font-bold text-m  bg-white  border-gray-200">
-                            <p className="text-gray-900 whitespace-no-wrap">
+                        <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
+                          application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
+                        }`}>
+                          <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
+                            <p className="whitespace-no-wrap">
+                              {application.applicantName}
+                            </p>
+                          </td>
+                          <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
+                            <p className="whitespace-no-wrap">
                               {application.applicationName}
                             </p>
                           </td>
-                          <td className="px-5 py-5 text-m bg-white  border-gray-200">
-                            <p className="text-gray-900 whitespace-no-wrap">
+                          <td className="px-5 py-5 text-m border-gray-200 w-4/12">
+                            <p className="whitespace-no-wrap">
                               {application.description}
 
                             </p>
                           </td>
 
-                          <td className="px-5 py-5 text-m bg-white  border-gray-200">
+                          <td className="px-5 py-5 text-m border-gray-200 w-1/12">
 
                             {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                               // <ApprovedByAdmin />
@@ -297,28 +307,65 @@ const ReviewerApplicationList = () => {
                           </td>
 
 
-                          <td className="px-5 py-5 text-m bg-white  border-gray-200">
-                            <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none">View</button>
+                          <td className="px-5 py-5 text-m border-gray-200 w-3/12">
+                            <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"><i className="fi fi-rr-eye"></i></button>
                             
-                            {/* EDIT BUTTON 
-                            <button onClick={() => handleEditClick(application._id)}
-                              className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-yellow-200 rounded hover:bg-yellow-300  focus:outline-none">Edit</button> */}
                             
                             {
+                              !application.isFrozen &&
                               application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin && 
                               application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                               application.isApproved !== APPLICATION_STATUS.ApprovedByReviewer &&
                               <button
-                                onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByReviewer)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">Approve</button>
+                                onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByReviewer)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none"><i className="fi fi-rr-check"></i></button>
                             }
                             {
+                              !application.isFrozen &&
                               application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin && 
                               application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
                               application.isApproved !== APPLICATION_STATUS.RejectedByReviewer &&
                               <button
-                                onClick={() => updateApplication(application._id, APPLICATION_STATUS.RejectedByReviewer)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">Reject</button>
+                                onClick={() => updateApplication(application._id, APPLICATION_STATUS.RejectedByReviewer)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none"><i className="fi fi-rr-cross"></i></button>
                             }
                           </td>
+
+                          {/* <td className="px-5 py-5 text-m border-gray-200 w-3/12">
+                            <div className="flex justify-between items-center space-x-2">
+                              <button
+                                onClick={() => handleViewClick(application._id)}
+                                className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-gray-600 rounded hover:bg-gray-700 focus:outline-none"
+                              >
+                                <i className="fi fi-rr-eye mr-2"></i>
+                                View
+                              </button>
+
+                              {!application.isFrozen &&
+                                application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
+                                application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                                application.isApproved !== APPLICATION_STATUS.ApprovedByReviewer && (
+                                  <button
+                                    onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByReviewer)}
+                                    className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-green-600 rounded hover:bg-green-700 focus:outline-none"
+                                  >
+                                    <i className="fi fi-rr-check mr-2"></i>
+                                    Approve
+                                  </button>
+                                )}
+
+                              {!application.isFrozen &&
+                                application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
+                                application.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                                application.isApproved !== APPLICATION_STATUS.RejectedByReviewer && (
+                                  <button
+                                    onClick={() => updateApplication(application._id, APPLICATION_STATUS.RejectedByReviewer)}
+                                    className="flex items-center justify-center text-m font-bold leading-none text-white py-2 px-4 bg-red-600 rounded hover:bg-red-700 focus:outline-none"
+                                  >
+                                    <i className="fi fi-rr-cross mr-2"></i>
+                                    Reject
+                                  </button>
+                                )}
+                            </div>
+                          </td> */}
 
                         </tr>
                         // </div>
@@ -326,7 +373,7 @@ const ReviewerApplicationList = () => {
                     ) : (
 
                       <tr className="border-gray-200 border-b justify-center">
-                        <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="7">
+                        <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="5">
                           <p className="text-gray-900 whitespace-no-wrap">
                             No Applications found.
                           </p>

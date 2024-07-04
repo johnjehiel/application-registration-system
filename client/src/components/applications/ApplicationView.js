@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,7 +20,7 @@ import { APPLICATION_STATUS, ROLES } from "../Constants";
 
 const ApplicationView = () => {
 
-  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState)
+  const { user } = useSelector(state => state.authState)
 
 
   const navigate = useNavigate();
@@ -134,14 +134,14 @@ const ApplicationView = () => {
   /* NO Need of edit for now 
   const handleEditClick = (applicationId) => {
     navigate(`/application-edit/${applicationId}`);
-  };
-  */
-
-  useEffect(() => {
-    getApplicationById();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
+    };
+    */
+   
+   useEffect(() => {
+     getApplicationById();
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+    
   return (
     <>
       {isLoading ? (
@@ -270,7 +270,7 @@ const ApplicationView = () => {
                       Attached File
                     </h1>
                     <div className="appearance-none block w-full h-screen text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                      <iframe className="w-full h-full" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`} ></iframe>
+                      <iframe className="w-full h-full" title="pdf" src={`${process.env.REACT_APP_SERVER_URL}/uploads/${applicationData.pdfFile.filename}`} ></iframe>
                     </div>
                   </div>
                 </div>
@@ -296,6 +296,7 @@ const ApplicationView = () => {
                 {/* <div>
                               <p className="text-m  text-xl sm:text-3xl md:text-4xl  lg:text-3xl xl:text-3xl  text-zinc-700 font-bold ">Status</p>
                             </div> */}
+                            
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
                   <ApprovedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
                 )}

@@ -20,7 +20,8 @@ DirectlyRejectedByAdmin
 */
 
 const formatDate = (date) => {
-  return format(parseISO(date),"EEEE dd-MM-yyyy hh:mm aa");
+  // return format(parseISO(date),"EEEE dd-MM-yyyy hh:mm aa");
+  return format(parseISO(date),"dd-MM-yyyy hh:mm aa");
 }
 
 export const ApplicationSent = ({ createdAt }) => {
@@ -41,7 +42,7 @@ export const ApplicationSent = ({ createdAt }) => {
             </div>
 
             <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
-            <div className="text-s font-semibold text-center md:text-base">{createdAt && formatDate(createdAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{createdAt && formatDate(createdAt)}</div>
           </div>
 
 
@@ -116,7 +117,7 @@ export const ApprovedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
             </div>
 
             <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
-            <div className="text-s font-semibold text-center md:text-base">{createdAt && formatDate(createdAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{createdAt && formatDate(createdAt)}</div>
           </div>
 
 
@@ -139,7 +140,7 @@ export const ApprovedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
             </div>
 
             <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
-            <div className="text-s font-semibold text-center md:text-base">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
           </div>
 
 
@@ -173,7 +174,7 @@ export const ApprovedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
   )
 }
 
-export const ApprovedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }) => {
+export const ApprovedByAdmin = ({ createdAt, reviewerUpdatedAt, adminUpdatedAt }) => {
   return (
     <>
       <div className="w-full py-6">
@@ -191,7 +192,7 @@ export const ApprovedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
             </div>
 
             <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
-            <div className="text-s font-semibold text-center md:text-base">{createdAt && formatDate(createdAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{createdAt && formatDate(createdAt)}</div>
           </div>
 
 
@@ -211,7 +212,7 @@ export const ApprovedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
             </div>
 
             <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
-            <div className="text-s font-semibold text-center md:text-base">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
           </div>
 
 
@@ -234,15 +235,11 @@ export const ApprovedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
               </div>
             </div>
             <div className="text-s font-semibold text-center md:text-base">Approved By Admin</div>
-            <div className="text-s font-semibold text-center md:text-base">{AdminUpdatedAt && formatDate(AdminUpdatedAt)}</div>
+            <div className="text-s text-center md:text-base text-gray-600">{adminUpdatedAt && formatDate(adminUpdatedAt)}</div>
           </div>
         </div>
       </div>
-
-
-
-
-
+      
     </>
   )
 }
@@ -266,7 +263,7 @@ export const RejectedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
               </div>
 
               <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
-              <div className="text-s font-semibold text-center md:text-base">{createdAt && formatDate(createdAt)}</div>
+              <div className="text-s text-center md:text-base text-gray-600">{createdAt && formatDate(createdAt)}</div>
             </div>
 
 
@@ -289,7 +286,7 @@ export const RejectedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
               </div>
 
               <div className="text-s font-semibold text-center md:text-base">Rejected By Reviewer</div>
-              <div className="text-s font-semibold text-center md:text-base">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
+              <div className="text-s text-center md:text-base text-gray-600">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
             </div>
 
 
@@ -319,7 +316,7 @@ export const RejectedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
       )
 }
 
-export const RejectedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }) => {
+export const RejectedByAdmin = ({ createdAt, reviewerUpdatedAt, adminUpdatedAt }) => {
 
   return (
       <>
@@ -338,7 +335,7 @@ export const RejectedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
               </div>
 
               <div className="text-s font-semibold text-center md:text-base">Application Sent</div>
-              <div className="text-s font-semibold text-center md:text-base">{createdAt && formatDate(createdAt)}</div>
+              <div className="text-s text-center md:text-base text-gray-600">{createdAt && formatDate(createdAt)}</div>
             </div>
 
 
@@ -358,7 +355,7 @@ export const RejectedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
               </div>
 
               <div className="text-s font-semibold text-center md:text-base">Approved By Reviewer</div>
-              <div className="text-s font-semibold text-center md:text-base">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
+              <div className="text-s text-center md:text-base text-gray-600">{reviewerUpdatedAt && formatDate(reviewerUpdatedAt)}</div>
             </div>
 
 
@@ -380,7 +377,7 @@ export const RejectedByAdmin = ({ createdAt, reviewerUpdatedAt, AdminUpdatedAt }
                 </div>
               </div>
               <div className="text-s font-semibold text-center md:text-base">Rejected By Admin</div>
-              <div className="text-s font-semibold text-center md:text-base">{AdminUpdatedAt && formatDate(AdminUpdatedAt)}</div>
+              <div className="text-s text-center md:text-base text-gray-600">{adminUpdatedAt && formatDate(adminUpdatedAt)}</div>
             </div>
           </div>
         </div>

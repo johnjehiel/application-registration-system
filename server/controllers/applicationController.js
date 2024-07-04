@@ -1,7 +1,7 @@
 const Application = require('../model/applicationSchema');
 const User = require('../model/userSchema');
 const nodemailer = require("nodemailer");
-const { APPLICATION_STATUS } = require('../utils/Constants');
+const { APPLICATION_STATUS, ROLES } = require('../utils/Constants');
 
 
  // transporter for sending email
@@ -228,8 +228,6 @@ const getApplicationById = async (req, res, next) => {
       path: 'userId',
       select: '-password -cpassword -tokens -verifyToken' // Exclude the password and cpassword fields
     });
-
-    // console.log(application);
     if (!application) {
       return res.status(404).json({ error: 'Application not found' });
     }
@@ -252,8 +250,23 @@ const updateApplication = async (req, res, next) => {
       description,
       rejectionReason,
       isApproved,
+      reviewerUpdatedAt,
+      adminUpdatedAt,
       isFrozen
     } = req.body;
+
+    let newReviewerUpdatedAt;
+    let newAdminUpdatedAt;
+    if (req.user.role === ROLES.reviewer) {
+      newReviewerUpdatedAt = new Date();
+    } else {
+      newReviewerUpdatedAt = reviewerUpdatedAt;
+    }
+    if (req.user.role === ROLES.admin) {
+      newAdminUpdatedAt = new Date();
+    } else {
+      newAdminUpdatedAt = adminUpdatedAt;
+    }
 
     const application = await Application.findByIdAndUpdate(
       applicationId,
@@ -266,6 +279,8 @@ const updateApplication = async (req, res, next) => {
         description,
         isApproved,
         rejectionReason,
+        adminUpdatedAt: newAdminUpdatedAt,
+        reviewerUpdatedAt: newReviewerUpdatedAt,
         isFrozen
       },
       { new: true },
@@ -274,15 +289,6 @@ const updateApplication = async (req, res, next) => {
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
-
-    // Send email based on the updated approval status
-    // if (isApproved === 'Approved By Admin') {
-    //   // Send email for approval
-    //   sendApprovalEmail(booking, bookingId);
-    // } else if (isApproved === 'Rejected By Admin') {
-    //   // Send email for rejection
-    //   sendRejectionEmail(booking, bookingId , rejectionReason);
-    // }
 
     res.json({ message: 'Application updated successfully', application});
   } catch (error) {
@@ -305,6 +311,8 @@ const freezeApplication = async (req, res, next) => {
       description,
       rejectionReason,
       isApproved,
+      adminUpdatedAt,
+      reviewerUpdatedAt,
       isFrozen
     } = req.body;
 
@@ -319,6 +327,8 @@ const freezeApplication = async (req, res, next) => {
         description,
         isApproved,
         rejectionReason,
+        adminUpdatedAt,
+        reviewerUpdatedAt,
         isFrozen
       },
       { new: true },

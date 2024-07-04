@@ -312,7 +312,7 @@ const ApplicationView = () => {
                     }
                     {
                       !applicationData.isFrozen &&
-                      applicationData.isApproved !== APPLICATION_STATUS.RejectedByAdmin &&
+                      (applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin || applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin) &&
                       <button
                       onClick={() => updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen, true)}
                       className="   leading-none text-gray-600 py-3 px-5 bg-blue-200 rounded hover:bg-blue-300 focus:outline-none">

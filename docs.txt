@@ -33,7 +33,6 @@ using email or phone to login => email or phone to login
 
 modifications:
     - rejected by reviewer and accepted by admin
-    - time to freeze the application
 
 completed modifications:
     - username -> only characters
@@ -41,3 +40,5 @@ completed modifications:
     - phone number should also be unique
     - error status under each textbox (used onfocus instead)
     - add filter for applications
+    - time to freeze the application
+    - add un freeze

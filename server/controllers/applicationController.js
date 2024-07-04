@@ -292,6 +292,49 @@ const updateApplication = async (req, res, next) => {
 };
 
 
+const freezeApplication = async (req, res, next) => {
+  try {
+    const { applicationId } = req.params;
+
+    const {
+      applicantName,
+      applicationName,
+      email,
+      phoneNumber,
+      altNumber,
+      description,
+      rejectionReason,
+      isApproved,
+      isFrozen
+    } = req.body;
+
+    const application = await Application.findByIdAndUpdate(
+      applicationId,
+      {
+        applicantName,
+        applicationName,
+        email,
+        phoneNumber,
+        altNumber,
+        description,
+        isApproved,
+        rejectionReason,
+        isFrozen
+      },
+      { new: true },
+    );
+
+    if (!application) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+
+    res.json({ message: 'Application updated successfully', application});
+  } catch (error) {
+    // next(error);
+    console.log(error);
+  }
+};
+
 
 const getApplicationForReviewer = async (req, res, next) => {
   // console.log(hodDepartment);
@@ -557,4 +600,4 @@ const getApplicationForAdmin = async (req, res, next) => {
 
 
 
-module.exports = { createNewApplication, getApplications, getApplicationByUserId, getApplicationById,  updateApplication, getApplicationForReviewer, getApplicationForAdmin };
+module.exports = { createNewApplication, getApplications, getApplicationByUserId, getApplicationById,  updateApplication, freezeApplication, getApplicationForReviewer, getApplicationForAdmin };

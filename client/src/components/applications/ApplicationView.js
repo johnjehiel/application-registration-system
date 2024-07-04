@@ -29,7 +29,6 @@ const ApplicationView = () => {
   const [applicationData, setApplicationData] = useState({});
   const [showModal, setShowModal] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
-  // const { state } = useContext(UserContext);
 
   const openModal = (applicationId) => {
     setShowModal(true);
@@ -55,14 +54,13 @@ const ApplicationView = () => {
       );
       const data = response.data.application;
       setApplicationData(data);
-      // console.log(applicationData.pdfFile)
       setIsLoading(false);
     } catch (error) {
       navigate("/");
     }
   };
 
-  const updateApplication = async (applicationId, isApproved, isFrozen, freeze) => {
+  const updateApplication = async (applicationId, isApproved, isFrozen) => {
     if (isFrozen) {
       return toast.error("application already frozen!");
     }
@@ -80,7 +78,6 @@ const ApplicationView = () => {
         `${process.env.REACT_APP_SERVER_URL}/application-edit/${applicationId}`,
         {
           isApproved: isApproved,
-          isFrozen: freeze,
           rejectionReason:
             isApproved === APPLICATION_STATUS.ApprovedByAdmin ? null : rejectionReason,
         },
@@ -94,11 +91,8 @@ const ApplicationView = () => {
       );
       closeModal();
       getApplicationById();
-      if (freeze) {
-        toast.success(`Application status finalized !`)
-      } else {
-        toast.success(`Application ${isApproved} Successfull!`);
-      }
+      toast.success(`Application ${isApproved} Successfull!`);
+
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -106,6 +100,37 @@ const ApplicationView = () => {
     } catch (error) {
     }
   };
+
+  const freezeApplication = async (applicationId, freeze) => {
+    setIsLoading(true);
+    try {
+      const response = await axios.put(
+        `${process.env.REACT_APP_SERVER_URL}/application-freeze/${applicationId}`,
+        {
+          isFrozen: freeze
+        },
+        {
+          withCredentials: true,
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      getApplicationById();
+      if (freeze) {
+        toast.success(`Application Frozen Successfully !`)
+      } else {
+        toast.success('Application unfrozen !')
+      }
+      if (response.status !== 200) {
+        throw new Error(response.error);
+      }
+      navigate("/");
+    } catch (error) {
+    }
+  }
+
   /* NO Need of edit for now 
   const handleEditClick = (applicationId) => {
     navigate(`/application-edit/${applicationId}`);
@@ -114,7 +139,6 @@ const ApplicationView = () => {
 
   useEffect(() => {
     getApplicationById();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -273,18 +297,18 @@ const ApplicationView = () => {
                               <p className="text-m  text-xl sm:text-3xl md:text-4xl  lg:text-3xl xl:text-3xl  text-zinc-700 font-bold ">Status</p>
                             </div> */}
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-                  <ApprovedByAdmin />
+                  <ApprovedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
-                  <ApprovedByReviewerStep />
+                  <ApprovedByReviewerStep createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
-                  <RejectedByReviewerStep />
+                  <RejectedByReviewerStep createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
-                  <RejectedByAdmin />
+                  <RejectedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
                 )}
-                {applicationData.isApproved === APPLICATION_STATUS.ApplicationSent && <ApplicationSent />}
+                {applicationData.isApproved === APPLICATION_STATUS.ApplicationSent && <ApplicationSent createdAt={applicationData?.createdAt} />}
               </div>
               <div className="px-5 py-5 text-l flex font-bold  bg-white justify-between border-gray-200">
                 
@@ -295,7 +319,7 @@ const ApplicationView = () => {
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                       onClick={() =>
-                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen, false)
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen)
                       }
                       className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
                         Approve
@@ -311,12 +335,11 @@ const ApplicationView = () => {
                       </button>
                     }
                     {
-                      !applicationData.isFrozen &&
                       (applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin || applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin) &&
                       <button
-                      onClick={() => updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByAdmin, applicationData.isFrozen, true)}
+                      onClick={() => freezeApplication(applicationData._id, !applicationData.isFrozen)}
                       className="   leading-none text-gray-600 py-3 px-5 bg-blue-200 rounded hover:bg-blue-300 focus:outline-none">
-                        freeze
+                        {!applicationData.isFrozen ? "freeze" : "un-freeze"}
                       </button>
                     }
                   </>
@@ -336,7 +359,7 @@ const ApplicationView = () => {
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                       onClick={() =>
-                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer, applicationData.isFrozen, false)
+                        updateApplication(applicationData._id, APPLICATION_STATUS.ApprovedByReviewer, applicationData.isFrozen)
                       }
                       className="   leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none">
                         Approve
@@ -348,7 +371,7 @@ const ApplicationView = () => {
                       applicationData.isApproved !== APPLICATION_STATUS.ApprovedByAdmin &&
                       <button
                         onClick={() =>
-                          updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer, applicationData.isFrozen, false)
+                          updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByReviewer, applicationData.isFrozen)
                         }
                         className="   leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none">
                         Reject
@@ -396,7 +419,7 @@ const ApplicationView = () => {
                 className="px-4 py-2 bg-red-500 text-white rounded mr-2"
                 // onClick={handleReject}
                 onClick={() =>
-                  updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin, applicationData.isFrozen, false)
+                  updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin, applicationData.isFrozen)
                 }>
                 Reject
               </button>

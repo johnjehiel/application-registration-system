@@ -25,6 +25,7 @@ router.post('/application-form', isAuthenticatedUser, upload.single("file"), app
 router.get('/applicant-applications',isAuthenticatedUser,  applicationController.getApplicationByUserId);
 router.get('/application-view/:applicationId',isAuthenticatedUser, applicationController.getApplicationById);
 router.put('/application-edit/:applicationId',isAuthenticatedUser,authorizeRoles(ROLES.admin, ROLES.reviewer), checkFrozen, applicationController.updateApplication);
+router.put('/application-freeze/:applicationId',isAuthenticatedUser,authorizeRoles(ROLES.admin), applicationController.freezeApplication);
 
 router.get('/application-for-reviewer', isAuthenticatedUser, authorizeRoles(ROLES.reviewer), applicationController.getApplicationForReviewer);
 router.get('/application-for-admin', isAuthenticatedUser, authorizeRoles(ROLES.admin), applicationController.getApplicationForAdmin);

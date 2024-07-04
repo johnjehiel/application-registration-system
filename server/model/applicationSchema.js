@@ -52,12 +52,32 @@ const applicationSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
       required: true
+    },
+    reviewerUpdatedAt: {
+      type: Date
+    },
+    adminUpdatedAt: {
+      type: Date
     }
   },
   {
     timestamps: true
   }
 );
+
+applicationSchema.pre('save', function (next) {
+  const application = this;
+
+  if (application.isModified('isApproved')) {
+    if (application.isApproved === APPLICATION_STATUS.ApprovedByReviewer || application.isApproved === APPLICATION_STATUS.RejectedByReviewer) {
+      application.reviewerUpdatedAt = new Date();
+    } else if (application.isApproved === APPLICATION_STATUS.ApprovedByAdmin || application.isApproved === APPLICATION_STATUS.RejectedByAdmin) {
+      application.adminUpdatedAt = new Date();
+    }
+  }
+
+  next();
+});
 
 // bookingSchema.index({ eventDate: 1 }, { expireAfterSeconds: 86400 });
 const Application = mongoose.model('application', applicationSchema);

@@ -273,18 +273,18 @@ const ApplicationView = () => {
                               <p className="text-m  text-xl sm:text-3xl md:text-4xl  lg:text-3xl xl:text-3xl  text-zinc-700 font-bold ">Status</p>
                             </div> */}
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-                  <ApprovedByAdmin />
+                  <ApprovedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer && (
-                  <ApprovedByReviewerStep />
+                  <ApprovedByReviewerStep createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer && (
-                  <RejectedByReviewerStep />
+                  <RejectedByReviewerStep createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} />
                 )}
                 {applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
-                  <RejectedByAdmin />
+                  <RejectedByAdmin createdAt={applicationData?.createdAt} reviewerUpdatedAt={applicationData?.reviewerUpdatedAt} adminUpdatedAt={applicationData?.adminUpdatedAt} />
                 )}
-                {applicationData.isApproved === APPLICATION_STATUS.ApplicationSent && <ApplicationSent />}
+                {applicationData.isApproved === APPLICATION_STATUS.ApplicationSent && <ApplicationSent createdAt={applicationData?.createdAt} />}
               </div>
               <div className="px-5 py-5 text-l flex font-bold  bg-white justify-between border-gray-200">
                 

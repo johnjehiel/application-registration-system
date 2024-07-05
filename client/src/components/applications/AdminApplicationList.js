@@ -137,6 +137,7 @@ const AdminApplicationList = () => {
         return applicationData
       }
     }
+    return false
   });
 
   /*

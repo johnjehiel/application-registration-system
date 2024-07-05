@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../LoadingSpinner";
 import axios from "axios";
@@ -202,7 +202,6 @@ const ApplicationForm = () => {
                     Applicant Name
                   </label>
                   <input
-                    // className="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                     className="appearance-none block w-full bg-white text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
                     id="grid-event-manager"
                     type="text"

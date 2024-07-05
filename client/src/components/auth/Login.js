@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
+import React, { useState, useEffect, useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
@@ -15,12 +14,10 @@ const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [authStatus, setAuthStatus] = useState("");
 
   const dispatch = useDispatch();
-  const location = useLocation();
   
-  const { loading, error, isAuthenticated, user } = useSelector(state => state.authState);
+  const { error, isAuthenticated, user } = useSelector(state => state.authState);
   
   const emailRef = useRef(null);
   const passwordRef = useRef(null);

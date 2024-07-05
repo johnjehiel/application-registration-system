@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const { authenticate } = require("../middleware/authenticate");
-
 // const cookieParser = require("cookie-parser");
 const authController = require('../controllers/authController');
-const { isAuthenticatedUser, authorizeRoles } = require('../middleware/authenticate')
+const { isAuthenticatedUser } = require('../middleware/authenticate')
 
 require("../DB/conn");
 // router.use(cookieParser());

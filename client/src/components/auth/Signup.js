@@ -1,7 +1,6 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
@@ -10,7 +9,6 @@ import { clearAuthError, register } from "../../actions/userActions";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [authStatus, setAuthStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   
   const [user, setUser] = useState({
@@ -35,7 +33,7 @@ const Signup = () => {
   };
 
   const dispatch = useDispatch();
-  const { loading, error, isAuthenticated } = useSelector(state => state.authState);
+  const { error, isAuthenticated } = useSelector(state => state.authState);
 
   const submitHandler = (e) => {
       e.preventDefault();
@@ -225,9 +223,7 @@ const Signup = () => {
                 />
               </div>
 
-              <div className="my-4">
-                <p className="text-s text-red-600	 font-bold">{authStatus}</p>
-              </div>
+
               <div className="mx-auto w-fit">
                 <div className="mx-auto">
                   <button

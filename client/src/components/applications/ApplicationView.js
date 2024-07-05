@@ -130,12 +130,6 @@ const ApplicationView = () => {
     } catch (error) {
     }
   }
-
-  /* NO Need of edit for now 
-  const handleEditClick = (applicationId) => {
-    navigate(`/application-edit/${applicationId}`);
-    };
-    */
    
    useEffect(() => {
      getApplicationById();
@@ -170,7 +164,6 @@ const ApplicationView = () => {
                     id="grid-event-manager">
                     {applicationData.applicantName}
                   </p>
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
                 <div className="w-full md:w-1/2 px-3">
                   <h1
@@ -198,7 +191,6 @@ const ApplicationView = () => {
                     id="grid-phone-number">
                     {applicationData.phoneNumber}
                   </p>
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
                 {
                   applicationData?.altNumber &&   
@@ -229,7 +221,6 @@ const ApplicationView = () => {
                     id="grid-description">
                     {applicationData.description}
                   </p>
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
               </div>
 
@@ -245,7 +236,6 @@ const ApplicationView = () => {
                     id="grid-phone-number">
                     {applicationData.userId.name}
                   </p>
-                  {/* <p className="text-red-500 text-xs italic">Please fill out this field.</p> */}
                 </div>
                 <div className="w-full md:w-1/2 px-3">
                   <h1

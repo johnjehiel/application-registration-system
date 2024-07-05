@@ -113,10 +113,6 @@ const ReviewerApplicationList = () => {
     navigate(`/application-view/${applicationId}`)
   };
 
-  // const handleEditClick = (applicationId) => {
-  //   navigate(`/application-edit/${applicationId}`)
-  // };
-
   return (
     <>
 

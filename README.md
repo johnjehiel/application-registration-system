@@ -24,7 +24,7 @@ application-registration-system/
 ├── server/
 │   ├── .env
 │   ├── Dockerfile
-│   ├── /upload
+│   ├── /uploads
 │   └── ...
 ├── docker-compose.yaml
 └── .env
@@ -32,7 +32,7 @@ application-registration-system/
 
 ## Creating Necessary Directories
 
-### Create Upload Directory for Multer
+### Create Uploads Directory for Multer
 
 1. Navigate to the `server` directory:
 
@@ -43,7 +43,7 @@ application-registration-system/
 2. Create the `upload` directory:
 
     ```sh
-    mkdir upload
+    mkdir uploads
     ```
 
 This directory will be used by Multer to store the uploaded PDF files.

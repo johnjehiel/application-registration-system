@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"
 import axios from 'axios';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import LoadingSpinner from "../LoadingSpinner";
 import { APPLICATION_STATUS } from "../Constants";
 
 const ApplicantApplicationList = () => {
   const navigate = useNavigate();
-  const [applicationData, setApplicationData] = useState({});
+  const [applicationData, setApplicationData] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [filterValue, setFilterValue] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   
   const getApplicationData = async (userId) => {
+    if (hasMore == false) return;
     try {
       const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/applicant-applications`, {
+        params: { page, pageSize: 5 },
         withCredentials: true, // include credentials in the request
         headers: {
           Accept: "application/json",
@@ -22,15 +27,17 @@ const ApplicantApplicationList = () => {
       });
 
       const data = response.data;
-      setApplicationData(data.application);
-   
+      setApplicationData((prevApplications) => [...prevApplications, ...data.applications]);
+      if (applicationData.length + data.applications.length >= data.totalApplications) {
+        setHasMore(false);
+      }
 
       setIsLoading(false);
       if (response.status !== 200) {
         throw new Error(response.error);
       }
     } catch (error) {
-
+      console.error("Error fetching applications:", error);
     }
   };
 
@@ -40,39 +47,40 @@ const ApplicantApplicationList = () => {
     getApplicationData();
     // console.log("applications", applicationData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [page])
 
   const handleFilter = (value) => {
     setFilterValue(value);
   };
-
+  
   const handleSearch = (event) => {
     setSearchQuery(event.target.value);
   };
+  
+  const handleViewClick = (applicationId) => {
+    navigate(`/application-view/${applicationId}`)
+  };
 
-  const filteredApplications = Object.values(applicationData).filter((applicationData) => {
+  const filteredApplications = applicationData.filter((applicationData) => {
     const matchesSearch = applicationData.applicationName.toLowerCase().includes(searchQuery.toLowerCase());
     if (matchesSearch) {
       if (filterValue === APPLICATION_STATUS.ApplicationSent) {
         return applicationData.isApproved === APPLICATION_STATUS.ApplicationSent;
       } else if (filterValue === APPLICATION_STATUS.ApprovedByReviewer) {
         return applicationData.isApproved === APPLICATION_STATUS.ApprovedByReviewer;
-      }else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
+      } else if (filterValue === APPLICATION_STATUS.ApprovedByAdmin) {
         return applicationData.isApproved === APPLICATION_STATUS.ApprovedByAdmin;
-      }else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
+      } else if (filterValue === APPLICATION_STATUS.RejectedByAdmin) {
         return applicationData.isApproved === APPLICATION_STATUS.RejectedByAdmin;
-      }else if (filterValue === APPLICATION_STATUS.RejectedByReviewer) {
+      } else if (filterValue === APPLICATION_STATUS.RejectedByReviewer) {
         return applicationData.isApproved === APPLICATION_STATUS.RejectedByReviewer;
       } else {
-        return applicationData
+        return applicationData;
       }
     }
     return false;
   });
 
-  const handleViewClick = (applicationId) => {
-    navigate(`/application-view/${applicationId}`)
-  };
  
   return (
     <>
@@ -151,6 +159,14 @@ const ApplicantApplicationList = () => {
         <div className="container w-full px-4 mx-auto sm:px-8 ">
             <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8 ">
                 <div className="inline-block min-w-full border overflow-hidden rounded-lg  shadow-xl shadow-blue-100 ">
+                <InfiniteScroll
+                dataLength={applicationData.length}
+                next={() => setPage(prev => prev + 1)}
+                hasMore={hasMore}
+                // loader={<h4>Loading...</h4>}
+                loader={<p className="text-gray-300">Loading...</p>}
+                endMessage={<></>}
+              >
                 <table className="min-w-full leading-normal">
                     <thead>
                     <tr className="bg-gray-200 border-gray-500  leading-normal  text-center">
@@ -170,11 +186,10 @@ const ApplicantApplicationList = () => {
                     </thead>
                     <tbody>
 
+                    { filteredApplications.length > 0 ? (
+                        filteredApplications.map((application, index) => (
 
-                    {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
-                        filteredApplications.map((application) => (
-
-                        <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
+                        <tr key={index} className={`border-gray-200 text-center border-b-2 ${
                           application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
                         }`}>
                             <td className="px-5 py-5 font-bold text-m border-gray-200 w-3/12">
@@ -245,6 +260,7 @@ const ApplicantApplicationList = () => {
                     )}
                     </tbody>
                 </table>
+                </InfiniteScroll>
                 </div>
             </div>
          </div>

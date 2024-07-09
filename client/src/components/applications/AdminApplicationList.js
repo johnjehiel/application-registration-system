@@ -4,9 +4,11 @@ import axios from 'axios';
 import LoadingSpinner from "../LoadingSpinner";
 import { toast } from "react-toastify";
 import { APPLICATION_STATUS } from "../Constants";
+import InfiniteScroll from 'react-infinite-scroll-component';
+
 const AdminApplicationList = () => {
   const navigate = useNavigate();
-  const [applicationData, setApplicationData] = useState({});
+  const [applicationData, setApplicationData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [filterValue, setFilterValue] = useState("all");
   const [showModal, setShowModal] = useState(false);
@@ -14,7 +16,8 @@ const AdminApplicationList = () => {
   const [selectedApplicationId, setSelectedApplicationId] = useState('');
   const [applicantNameSearchQuery, setApplicantNameSearchQuery] = useState("");
   const [applicationNameSearchQuery, setApplicationNameSearchQuery] = useState("");
-
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
   const openModal = (applicationId) => {
     setShowModal(true);
@@ -27,8 +30,10 @@ const AdminApplicationList = () => {
   };
 
   const getApplicationData = async () => {
+    if (hasMore == false) return;
     try {
       const response = await axios.get(`${process.env.REACT_APP_SERVER_URL}/application-for-admin`, {
+        params: { page, pageSize: 5 },
         withCredentials: true, // include credentials in the request
         headers: {
           Accept: "application/json",
@@ -38,12 +43,14 @@ const AdminApplicationList = () => {
 
       const data = response.data;
 
-      const sortedApplicationData = data.applications.sort((a, b) => {
-        // Convert the event date strings to Date objects and compare them
-        return new Date(a.createdAt) - new Date(b.createdAt);
-      });
-
-      setApplicationData(sortedApplicationData);
+      // const sortedApplicationData = data.applications.sort((a, b) => {
+      //   // Convert the event date strings to Date objects and compare them
+      //   return new Date(a.createdAt) - new Date(b.createdAt);
+      // });
+      setApplicationData((prevApplications) => [...prevApplications, ...data.applications]);
+      if (applicationData.length + data.applications.length >= data.totalApplications) {
+        setHasMore(false);
+      }
       setIsLoading(false);
 
 
@@ -63,7 +70,7 @@ const AdminApplicationList = () => {
     getApplicationData();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [page])
 
 
   const updateApplication = async (applicationId, isApproved) => {
@@ -95,9 +102,10 @@ const AdminApplicationList = () => {
       );
 
       closeModal();
-      getApplicationData();
-
+      // getApplicationData();
+      
       toast.success(`Request ${isApproved} Successfull!`);
+      handleViewClick(applicationId);
       if (response.status !== 200) {
         throw new Error(response.error);
       }
@@ -121,7 +129,7 @@ const AdminApplicationList = () => {
     setApplicationNameSearchQuery(event.target.value);
   };
 
-  const filteredApplications = Object.values(applicationData).filter((applicationData) => {
+  const filteredApplications = applicationData.filter((applicationData) => {
     const matchApplicantName = applicationData.applicantName.toLowerCase().includes(applicantNameSearchQuery.toLowerCase());
     const matchApplicationName = applicationData.applicationName.toLowerCase().includes(applicationNameSearchQuery.toLowerCase());
     if (matchApplicantName && matchApplicationName) {
@@ -249,124 +257,133 @@ const AdminApplicationList = () => {
           <div className="container w-full px-4 mx-auto sm:px-8 ">
               <div className="px-4 py-4 -mx-4 overflow-x-auto sm:-mx-8 sm:px-8 ">
                 <div className="inline-block min-w-full border overflow-hidden rounded-lg  shadow-xl shadow-blue-100 ">
-                  <table className="min-w-full leading-normal">
-                    <thead>
-                      <tr className="bg-gray-200 border-gray-500  leading-normal  text-center">
-                          <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
-                          Applicant Name
-                          </th>
-                          <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
-                          Application Name
-                          </th>
-                          <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200 w-4/12">
-                          Description
-                          </th>
-                          <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-1/12">
-                          Status
-                          </th>
-                          <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-3/12">
-                          Actions
-                          </th>
-                      </tr>
-                    </thead>
-                    <tbody>
-
-
-                      {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
-                        filteredApplications.map((application) => (
-
-                          <tr key={application._id} className={`border-gray-200 text-center border-b-2 ${
-                            application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
-                          }`}>
-                            <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
-                              <p className="whitespace-no-wrap">
-                                {application.applicantName}
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
-                              <p className="whitespace-no-wrap">
-                                {application.applicationName}
-                              </p>
-                            </td>
-                            <td className="px-5 py-5 text-m  border-gray-200 w-4/12">
-                              <p className="whitespace-no-wrap">
-                                {application.description}
-
-                              </p>
-                            </td>
-
-                            <td className="px-5 py-5 text-m border-gray-200 w-1/12">
-
-                              {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
-               
-                                <p className="text-green-600 font-bold whitespace-no-wrap">
-                                  {application.isApproved}
-                                </p>
-                              )}
-                              {(application.isApproved === APPLICATION_STATUS.ApprovedByReviewer &&
-                                <p className="text-blue-600 font-bold  whitespace-no-wrap">
-                                Approved By Reviewer
-                                </p>
-                              )}
-                              {(application.isApproved === APPLICATION_STATUS.RejectedByReviewer &&  
-                                <p className="text-red-900 font-bold  whitespace-no-wrap">
-                                Rejected By Reviewer
-                                </p>
-                              )}
-
-                              {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
-                                <p className="text-red-600 font-bold  whitespace-no-wrap">
-                                  Pending
-                                </p>
-                              )}
-
-                              {application.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
-                                <p className="text-red-900 font-bold  whitespace-no-wrap">
-                                  {application.isApproved}
-                                </p>
-
-                              )}
-
-                            </td>
-
-                            <td className="px-5 py-5 text-m border-gray-200 w-3/12">
-                              <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"><i className="fi fi-rr-eye"></i></button>
-                          
-                              {
-                                !application.isFrozen && application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin && 
-                                <button
-                                  onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByAdmin)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none"
-                                >
-                                    <i className="fi fi-rr-check"></i>
-                                </button>
-                              }
-                              {
-                                !application.isFrozen && application.isApproved !== APPLICATION_STATUS.RejectedByAdmin && 
-                              <button
-                                  onClick={() => openModal(application._id)}
-                                  className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none"
-                                >
-                                  <i className="fi fi-rr-cross"></i>
-                              </button>
-                              }
-                            </td>
-
-
-                          </tr>
-                        ))
-                      ) : (
-
-                        <tr className="border-gray-200 border-b justify-center">
-                          <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="5">
-                            <p className="text-gray-900 whitespace-no-wrap">
-                              No Applications found.
-                            </p>
-                          </td>
+                <InfiniteScroll
+                  dataLength={applicationData.length}
+                  next={() => setPage(prev => prev + 1)}
+                  hasMore={hasMore}
+                  // loader={<h4>Loading...</h4>}
+                  loader={<p className="text-gray-300">Loading...</p>}
+                  endMessage={<></>}
+                >
+                    <table className="min-w-full leading-normal">
+                      <thead>
+                        <tr className="bg-gray-200 border-gray-500  leading-normal  text-center">
+                            <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
+                            Applicant Name
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-2/12">
+                            Application Name
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase  border-gray-200 w-4/12">
+                            Description
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-1/12">
+                            Status
+                            </th>
+                            <th scope="col" className="px-4 py-3 text-l   text-gray-800 uppercase   border-gray-200 w-3/12">
+                            Actions
+                            </th>
                         </tr>
-                      )}
+                      </thead>
+                      <tbody>
 
-                    </tbody>
-                  </table>
+
+                        {Array.isArray(filteredApplications) && filteredApplications.length > 0 ? (
+                          filteredApplications.map((application, index) => (
+
+                            <tr key={index} className={`border-gray-200 text-center border-b-2 ${
+                              application.isFrozen ? 'bg-gray-100 text-gray-400' : 'bg-white text-gray-900'
+                            }`}>
+                              <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
+                                <p className="whitespace-no-wrap">
+                                  {application.applicantName}
+                                </p>
+                              </td>
+                              <td className="px-5 py-5 font-bold text-m border-gray-200 w-2/12">
+                                <p className="whitespace-no-wrap">
+                                  {application.applicationName}
+                                </p>
+                              </td>
+                              <td className="px-5 py-5 text-m  border-gray-200 w-4/12">
+                                <p className="whitespace-no-wrap">
+                                  {application.description}
+
+                                </p>
+                              </td>
+
+                              <td className="px-5 py-5 text-m border-gray-200 w-1/12">
+
+                                {application.isApproved === APPLICATION_STATUS.ApprovedByAdmin && (
+                
+                                  <p className="text-green-600 font-bold whitespace-no-wrap">
+                                    {application.isApproved}
+                                  </p>
+                                )}
+                                {(application.isApproved === APPLICATION_STATUS.ApprovedByReviewer &&
+                                  <p className="text-blue-600 font-bold  whitespace-no-wrap">
+                                  Approved By Reviewer
+                                  </p>
+                                )}
+                                {(application.isApproved === APPLICATION_STATUS.RejectedByReviewer &&  
+                                  <p className="text-red-900 font-bold  whitespace-no-wrap">
+                                  Rejected By Reviewer
+                                  </p>
+                                )}
+
+                                {application.isApproved === APPLICATION_STATUS.ApplicationSent && (
+                                  <p className="text-red-600 font-bold  whitespace-no-wrap">
+                                    Pending
+                                  </p>
+                                )}
+
+                                {application.isApproved === APPLICATION_STATUS.RejectedByAdmin && (
+                                  <p className="text-red-900 font-bold  whitespace-no-wrap">
+                                    {application.isApproved}
+                                  </p>
+
+                                )}
+
+                              </td>
+
+                              <td className="px-5 py-5 text-m border-gray-200 w-3/12">
+                                <button onClick={() => handleViewClick(application._id)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-gray-200 rounded hover:bg-gray-300 focus:outline-none"><i className="fi fi-rr-eye"></i></button>
+                            
+                                {
+                                  !application.isFrozen && application.isApproved !== APPLICATION_STATUS.ApprovedByAdmin && 
+                                  <button
+                                    onClick={() => updateApplication(application._id, APPLICATION_STATUS.ApprovedByAdmin)} className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-green-200 rounded hover:bg-green-300 focus:outline-none"
+                                  >
+                                      <i className="fi fi-rr-check"></i>
+                                  </button>
+                                }
+                                {
+                                  !application.isFrozen && application.isApproved !== APPLICATION_STATUS.RejectedByAdmin && 
+                                <button
+                                    onClick={() => openModal(application._id)}
+                                    className="text-m font-bold ml-5 leading-none text-gray-600 py-3 px-5 bg-red-200 rounded hover:bg-red-300 focus:outline-none"
+                                  >
+                                    <i className="fi fi-rr-cross"></i>
+                                </button>
+                                }
+                              </td>
+
+
+                            </tr>
+                          ))
+                        ) : (
+
+                          <tr className="border-gray-200 border-b justify-center">
+                            <td className="px-5 py-5 font-bold text-m bg-white border-gray-200 text-center" colSpan="5">
+                              <p className="text-gray-900 whitespace-no-wrap">
+                                No Applications found.
+                              </p>
+                            </td>
+                          </tr>
+                        )}
+
+                      </tbody>
+                    </table>
+                  </InfiniteScroll >
                 </div>
               </div>
           </div>

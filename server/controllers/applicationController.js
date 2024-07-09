@@ -89,18 +89,39 @@ const getApplications = async (req, res, next) => {
     next(error);
   }
 };
-
+/*
 const getApplicationByUserId = async (req, res, next) => {
   try {
     const userId = req.user._id
     const application = await Application.find({ userId }).populate({
       path: 'userId',
       select: '-password'
-    });
+    }).;
     if (!application) {
       return res.status(404).json({ message: 'Application not found' });
     }
     res.json({ application });
+  } catch (error) {
+    next(error);
+  }
+};
+*/
+
+const getApplicationByUserId = async (req, res, next) => {
+  try {
+    const userId = req.user._id
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
+    const skip = (page - 1) * pageSize;
+    const applications = await Application.find({ userId }).populate({
+      path: 'userId',
+      select: '-password'
+    }).skip(skip).limit(pageSize);
+    if (!applications) {
+      return res.status(404).json({ message: 'Application not found' });
+    }
+    const totalApplications = await Application.find({ userId }).countDocuments();
+    res.json({ applications , totalApplications});
   } catch (error) {
     next(error);
   }
@@ -231,9 +252,12 @@ const freezeApplication = async (req, res, next) => {
 
 const getApplicationForReviewer = async (req, res, next) => {
   try {
-    const application = await Application.find();
-
-    res.json({ application });
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
+    const skip = (page - 1) * pageSize;
+    const applications = await Application.find().skip(skip).limit(pageSize);
+    const totalApplications = await Application.find().countDocuments();
+    res.json({ applications , totalApplications});
   } catch (error) {
     next(error);
   }
@@ -245,15 +269,18 @@ const getApplicationForAdmin = async (req, res, next) => {
     const adminEmail = req.user.email;
     const userId = req.user._id;
 
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 5;
+    const skip = (page - 1) * pageSize;
     const applications = await Application.find({
        isApproved: { $in: statusArray }
   }
     ).populate({
       path: 'userId',
       select: '-password -cpassword -tokens -verifyToken'
-    });
-    
-    res.json({ applications });
+    }).skip(skip).limit(pageSize);
+    const totalApplications = await Application.find().countDocuments();
+    res.json({ applications , totalApplications});
 
   } catch (error) {
     next(error);

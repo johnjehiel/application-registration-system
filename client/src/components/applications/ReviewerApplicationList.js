@@ -32,10 +32,6 @@ const ReviewerApplicationList = () => {
 
       const data = response.data;
 
-      // const sortedApplicationData = data.application.sort((a, b) => {
-      //   // Convert the event date strings to Date objects and compare them
-      //   return new Date(a.createdAt) - new Date(b.createdAt);
-      // });
 
       setApplicationData((prevApplications) => [...prevApplications, ...data.applications]);
       if (applicationData.length + data.applications.length >= data.totalApplications) {
@@ -75,7 +71,6 @@ const ReviewerApplicationList = () => {
         }
       });
       
-      // getApplicationData();
       toast.success(`Request ${isApproved} Successfull!`)
       handleViewClick(applicationId);
       if (response.status !== 200) {
@@ -207,7 +202,6 @@ const ReviewerApplicationList = () => {
                 dataLength={applicationData.length}
                 next={() => setPage(prev => prev + 1)}
                 hasMore={hasMore}
-                // loader={<h4>Loading...</h4>}
                 loader={<p className="text-gray-300">Loading...</p>}
                 endMessage={<></>}
               >

@@ -31,7 +31,6 @@ const createNewApplication = async (req, res, next) => {
 
     }
 
-    // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
     const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
     
     if (!nameRegex.test(applicantName)) {
@@ -89,23 +88,6 @@ const getApplications = async (req, res, next) => {
     next(error);
   }
 };
-/*
-const getApplicationByUserId = async (req, res, next) => {
-  try {
-    const userId = req.user._id
-    const application = await Application.find({ userId }).populate({
-      path: 'userId',
-      select: '-password'
-    }).;
-    if (!application) {
-      return res.status(404).json({ message: 'Application not found' });
-    }
-    res.json({ application });
-  } catch (error) {
-    next(error);
-  }
-};
-*/
 
 const getApplicationByUserId = async (req, res, next) => {
   try {

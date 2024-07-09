@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 import MetaData from "../layouts/MetaData";
 import { clearAuthError, login } from "../../actions/userActions";
 import { useDispatch, useSelector } from "react-redux";
-// import CaptchaComponent from "../CaptchaComponent";
 
 const Login = () => {
 
@@ -22,7 +21,6 @@ const Login = () => {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
 
-  // new
   const loginUser = (e) => {
     e.preventDefault();
 
@@ -121,8 +119,6 @@ const Login = () => {
                 className="w-full bg-white rounded border border-gray-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out"
               />
             </div>
-
-            {/* <CaptchaComponent /> */}
 
             <div className="mx-auto w-fit">
               <div className="mx-auto">

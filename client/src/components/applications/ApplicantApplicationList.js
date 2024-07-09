@@ -45,7 +45,6 @@ const ApplicantApplicationList = () => {
 
   useEffect(() => {
     getApplicationData();
-    // console.log("applications", applicationData);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page])
 

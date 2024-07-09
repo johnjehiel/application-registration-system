@@ -7,17 +7,7 @@ const styles = {
   transform: `translate(-50%, -50%)`
 };
 
-/*
-applicationSent
-approvedByReviewer
-RejectedByReviewer
-approvedByReviewerRejectedByAdmin
-RejectedByReviewerRejectedByAdmin
-approvedByReviewerApprovedByAdmin
-RejectedByReviewerApprovedByAdmin
-DirectlyApprovedByAdmin
-DirectlyRejectedByAdmin
-*/
+
 
 const formatDate = (date) => {
   // return format(parseISO(date),"EEEE dd-MM-yyyy hh:mm aa");
@@ -53,7 +43,6 @@ export const ApplicationSent = ({ createdAt }) => {
               >
                 <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
                   <div className=" bg-indigo-700 py-1 rounded w-1/2"
-                  //  style="width: 50%;"
                   ></div>
                 </div>
               </div>
@@ -127,7 +116,6 @@ export const ApprovedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
                 style={styles}        >
                 <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
                   <div className=" bg-indigo-700 py-1 rounded w-full"
-                  // style="width: 100%;"
                   ></div>
                 </div>
               </div>
@@ -150,7 +138,6 @@ export const ApprovedByReviewerStep = ({ createdAt, reviewerUpdatedAt }) => {
                 style={styles}        >
                 <div className="w-full bg-gray-200 rounded items-center align-middle align-center flex-1">
                   <div className=" bg-indigo-700 py-1 rounded w-1/2"
-                  //  style="width: 50%;"
                   ></div>
                 </div>
               </div>

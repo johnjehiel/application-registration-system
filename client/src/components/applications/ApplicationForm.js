@@ -49,7 +49,6 @@ const ApplicationForm = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-//   // handle change here
 
   const handleInputs = (e) => {
     const name = e.target.name;

@@ -43,10 +43,7 @@ const AdminApplicationList = () => {
 
       const data = response.data;
 
-      // const sortedApplicationData = data.applications.sort((a, b) => {
-      //   // Convert the event date strings to Date objects and compare them
-      //   return new Date(a.createdAt) - new Date(b.createdAt);
-      // });
+
       setApplicationData((prevApplications) => [...prevApplications, ...data.applications]);
       if (applicationData.length + data.applications.length >= data.totalApplications) {
         setHasMore(false);
@@ -102,7 +99,6 @@ const AdminApplicationList = () => {
       );
 
       closeModal();
-      // getApplicationData();
       
       toast.success(`Request ${isApproved} Successfull!`);
       handleViewClick(applicationId);
@@ -118,9 +114,6 @@ const AdminApplicationList = () => {
   const handleFilter = (value) => {
     setFilterValue(value);
   };
-  // const handleFilterValues = (values) => {
-  //   setFilterValues(values);
-  // };
 
   const handleApplicantNameSearch = (event) => {
     setApplicantNameSearchQuery(event.target.value);
@@ -148,17 +141,12 @@ const AdminApplicationList = () => {
     return false
   });
 
-  /*
-  const handleEditClick = (applicationId) => {
-    navigate(`/bookingsEdit/${applicationId}`)
-  };
-  */
+
   const handleViewClick = (applicationId) => {
     navigate(`/application-view/${applicationId}`)
   };
   return (
     <>
-      {/* <Index /> */}
 
       <div className="mt-6">
         <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-3xl xl:text-3xl text-center text-gray-800 font-black leading-7 ml-3 md:leading-10">
@@ -213,7 +201,6 @@ const AdminApplicationList = () => {
               </button>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded mr-2"
-                // onClick={handleReject}
                 onClick={() =>
                   updateApplication(selectedApplicationId, APPLICATION_STATUS.RejectedByAdmin)
                 }
@@ -261,7 +248,6 @@ const AdminApplicationList = () => {
                   dataLength={applicationData.length}
                   next={() => setPage(prev => prev + 1)}
                   hasMore={hasMore}
-                  // loader={<h4>Loading...</h4>}
                   loader={<p className="text-gray-300">Loading...</p>}
                   endMessage={<></>}
                 >

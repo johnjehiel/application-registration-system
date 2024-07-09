@@ -392,7 +392,6 @@ const ApplicationView = () => {
               </button>
               <button
                 className="px-4 py-2 bg-red-500 text-white rounded mr-2"
-                // onClick={handleReject}
                 onClick={() =>
                   updateApplication(applicationData._id, APPLICATION_STATUS.RejectedByAdmin, applicationData.isFrozen)
                 }>

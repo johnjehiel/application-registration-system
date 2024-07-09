@@ -1,15 +1,9 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
 
 const User = require("../model/userSchema");
-const nodemailer = require("nodemailer")
-const jwt = require("jsonwebtoken")
 const sendToken = require('../utils/jwt');
 const catchAsyncError = require('../middleware/catchAsyncError');
 const ErrorHandler = require("../utils/ErrorHandler");
-// const { ROLES } = require("../utils/Constants");
 
-// new
 const registerUser = catchAsyncError(async (req, res, next) => {
     const {name, email, password, phone } = req.body
 
@@ -26,7 +20,6 @@ const registerUser = catchAsyncError(async (req, res, next) => {
       return next(new ErrorHandler('phone field is empty', 400))
     }
 
-    // const nameRegex = /^[\w'.]+\s[\w'.]+\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*\s*[\w'.]*$/;
     const nameRegex = /^[a-zA-Z'.]+\s[a-zA-Z'.]+(?:\s[a-zA-Z'.]*){0,4}$/;
 
     if (!nameRegex.test(name)) {
